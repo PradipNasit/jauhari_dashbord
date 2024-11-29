@@ -1,7 +1,7 @@
 class Api {
 
   Api ._();
-  static  const baseUrl = "https://jauhari-backend.vercel.app/api";
+  static    const baseUrl = "https://jauhari-backend.vercel.app/api";
   static  const logIn = "/admin-login";
   static  const getDashBordData = "/get/sip/analytics";
   static  const getUserData = "/get/users";
