@@ -23,7 +23,6 @@ class HomeScreenController extends GetxController {
 
   RxBool isDashBordDataLoading = false.obs;
 
-
   final sipAmount = TextEditingController();
 
   List<Map<String, dynamic>> get homeOptions {
@@ -59,37 +58,28 @@ class HomeScreenController extends GetxController {
     ];
   }
 
-  Widget buildResponsiveView(int option, HomeScreenController controller) {
-
-
+  buildResponsiveView(int option, HomeScreenController controller) {
     switch (option) {
-
       case 0:
         return ResponsiveLayout(
           deskTopView: HomePageDesktopView(controller: controller),
           // mobileView: HomePageMobileView(controller: controller),
         );
       case 1:
-      // deletePreviousController(UserManagementController);
+        // deletePreviousController(UserManagementController);
         return ResponsiveLayout(
           deskTopView: UserManagementDesktopView(),
           // mobileView: UserManagementMobileView(),
         );
-      case 2:
-      // deletePreviousController(SipManagementController);
-        return ResponsiveLayout(
-          deskTopView: SipManagementDesktopView(),
-          // mobileView: UserManagementMobileView(),
-        );
-      case 4:
-        log(name: "tryng to navigae" , option.toString());
+
+      case 3:
         return ResponsiveLayout(deskTopView: BusinessSetUpScreen());
-      case 5:
+      case 4:
         return ResponsiveLayout(deskTopView: SocialMediaScreen());
 
-      case 6:
+      case 5:
         return ResponsiveLayout(deskTopView: BannerSetUpScreen());
-      case 7:
+      case 6:
         return ResponsiveLayout(deskTopView: NotificationScreen());
 
       default:
@@ -100,21 +90,18 @@ class HomeScreenController extends GetxController {
   List<Map<String, dynamic>> sideBarOptions = [
     {"title": "Dashboard"},
     {"title": "User Management"},
-    {"title": "SIP Management"},
     {"title": "Payments Overview"},
     {"title": "Business Setup"},
     {"title": "Pages and Social Media"},
     {"title": "Banner Setup"},
     {"title": "Notifications"},
-
   ];
 
   final box = GetStorage();
 
-  CreateSipRequestModel createSipRequestData () {
+  CreateSipRequestModel createSipRequestData() {
     return CreateSipRequestModel(monthlyAmount: int.parse(sipAmount.text));
   }
-
 
   Future<void> getDashBordData() async {
     final token = box.read("token");
@@ -133,7 +120,6 @@ class HomeScreenController extends GetxController {
     }
   }
 
-
   Future<void> createSipPlans() async {
     final token = box.read("token");
 
@@ -142,17 +128,12 @@ class HomeScreenController extends GetxController {
         url: Api.baseUrl + Api.createSip,
         requestType: RequestType.POST,
         headers: {"Authorization": "Bearer $token"},
-    body: creteSipData.toJson()
-    );
-
-
-
+        body: creteSipData.toJson());
 
     log(name: "createSipStatusCode", response!.statusCode.toString());
     log(name: "createSipResponse", response!.body.toString());
 
-    if (response?.statusCode == 200) {
-    }
+    if (response?.statusCode == 200) {}
   }
 
   @override

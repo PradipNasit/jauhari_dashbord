@@ -15,6 +15,7 @@ class DynamicTable<T> extends StatelessWidget {
   final void Function(T)? onDelete;
   final RxInt editingRowIndex; // Track which row is editable
   final List<void Function(T, int, String)>? onChanged;
+  final void Function(T)?onViewButtonPressed;
   final bool isReadOnly;
 
   DynamicTable({
@@ -22,6 +23,8 @@ class DynamicTable<T> extends StatelessWidget {
     required this.data,
     required this.valueExtractors,
     required this.editingRowIndex,
+    required this.onViewButtonPressed,
+
     this.onEdit,
     this.isReadOnly = true,
     this.onDelete,
@@ -138,11 +141,9 @@ class DynamicTable<T> extends StatelessWidget {
                       child: Center(
                         child: ElevatedButton(
                           onPressed: () {
-
-                            Get.to(()=> UserAllDetails());
-
-
-                            log("View button pressed for row $index");
+                            if (onViewButtonPressed != null) {
+                              onViewButtonPressed!(item); // Properly invoke the callback
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(

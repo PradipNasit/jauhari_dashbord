@@ -6,13 +6,14 @@ import 'package:jauhari_dashbord/Helper/color_helper.dart';
 import 'package:jauhari_dashbord/base_layout.dart';
 import 'package:jauhari_dashbord/common/common_text_field.dart';
 import 'package:jauhari_dashbord/common/common_text_widget.dart';
+import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_sip_model.dart';
 import 'package:jauhari_dashbord/view/user%20All%20Details/controller/user_all_details_controller.dart';
 
 Widget userAllDetailsDesktopView(
-    {UserAllDetailsController? controller, required BuildContext context}) {
-  return BaseLayout(
+    {UserAllDetailsController? controller, required BuildContext context,UserSIpData? data}) {
+  return Scaffold(
 
-    content: GestureDetector(
+    body: GestureDetector(
       onTap: () {
         //  Close the popup when tapping outside
         if (controller!.isGoldWithdrawPopUpShow.value) {
@@ -67,7 +68,7 @@ Widget userAllDetailsDesktopView(
                     runSpacing: 10,
                     spacing: 10,
                     children: List.generate(
-                      controller!.userDetailsValue.length,
+                      controller!.userDetailsValue().length,
                       (index) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         height: 80,
@@ -82,17 +83,19 @@ Widget userAllDetailsDesktopView(
                             const SizedBox(width: 10),
                             Expanded(
                               child: CommonText(
-                                text: controller.userDetailsValue[index]['title'],
+                                text: controller.userDetailsValue()[index]['title'].toString(),
                                 fontSize: 14,
                                 maxLines: 3,
                               ),
                             ),
                             const SizedBox(width: 15),
                             CommonText(
-                              text: controller.userDetailsValue[index]
-                                  ['totalValue'],
+                              text: controller.userDetailsValue()[index]
+                                  ['totalValue'].toString(),
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -260,6 +263,7 @@ Widget userAllDetailsDesktopView(
                 GestureDetector(
                   onTap: () {
                     controller.isOTPPopUpShow.value = false;
+                    controller.goldWithDraw();
                   },
                   child: Container(
                     height: 50,

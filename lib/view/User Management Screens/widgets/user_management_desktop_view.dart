@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,17 +10,18 @@ import 'package:jauhari_dashbord/common/common_text_field.dart';
 import 'package:jauhari_dashbord/common/common_text_widget.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/controller/user_management_controller.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_details_model.dart';
+import 'package:jauhari_dashbord/view/user%20All%20Details/view/user_all_details.dart';
 
 class UserManagementDesktopView extends StatelessWidget {
   UserManagementDesktopView({super.key});
 
-  final userManagementController = Get.put(UserManagementController());
+  final userManagementController = Get.put(UserManagementController(),permanent: true);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorHelper.containerBgColor,
-      body:     Column(
+      body:  Column(
         children: [
           Flexible(
             child: SingleChildScrollView(
@@ -93,6 +96,12 @@ class UserManagementDesktopView extends StatelessWidget {
                           userManagementController.emailctr.text = value;
                         },
                       ],
+
+                          onViewButtonPressed: (p0) {
+
+                        userManagementController.getUserSipDetails(p0.id.toString());
+                        // Get.to(()=> UserAllDetails());
+                          },
                       onDelete: (p0) {
                         userManagementController
                             .deleteUser(p0.id.toString());

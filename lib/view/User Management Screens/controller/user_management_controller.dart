@@ -1,17 +1,24 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jauhari_dashbord/apis/univarsal_apis.dart';
+import 'package:jauhari_dashbord/base_layout.dart';
 import 'package:jauhari_dashbord/common/common_api_service.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/request/delete_user_request.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/request/edit_sip_request.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/request/edit_user_request.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/get_user_data_model.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_details_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_sip_model.dart';
+import 'package:jauhari_dashbord/view/user%20All%20Details/view/user_all_details.dart';
 
 class UserManagementController extends GetxController {
   final box = GetStorage();
+  RxBool isUserSipDetailsLoading = false.obs;
 
   final userSearchController = TextEditingController();
 
@@ -22,7 +29,6 @@ class UserManagementController extends GetxController {
   final nomineeNameCtr = TextEditingController();
   final mobileNumberCtr = TextEditingController();
 
-
   var editingRowIndex = (-1).obs;
 
   List<GetUserDataModel>? userData;
@@ -31,7 +37,6 @@ class UserManagementController extends GetxController {
   List<UserDetails> tempValue = [];
 
   RxBool userDataLoading = false.obs;
-
 
   void filterUser(String query) {
     if (query.isEmpty) {
@@ -62,13 +67,11 @@ class UserManagementController extends GetxController {
         nomineeNunmber: "9714961893");
   }
 
-  EditSipRequest editSipReq( String id , String status) {
+  EditSipRequest editSipReq(String id, String status) {
     return EditSipRequest(id: id, status: status);
   }
 
-
-  DeleteUserRequest deleteUserReq( String id) {
-
+  DeleteUserRequest deleteUserReq(String id) {
     return DeleteUserRequest(id: id);
   }
 
@@ -124,10 +127,9 @@ class UserManagementController extends GetxController {
     }
   }
 
-
-  Future<void> editSipStatusData(String id , String status) async {
+  Future<void> editSipStatusData(String id, String status) async {
     final token = box.read("token");
-    final editSipRedData = editSipReq(id , status);
+    final editSipRedData = editSipReq(id, status);
 
     final response = await CommonApiService.request(
         url: Api.baseUrl + Api.editSipData,
@@ -135,13 +137,11 @@ class UserManagementController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
         body: editSipRedData.toJson());
     log(name: "editSipData", response!.body.toString());
-
   }
-
 
   Future<void> deleteUser(String id) async {
     final token = box.read("token");
-     final deleteUserData = deleteUserReq(id );
+    final deleteUserData = deleteUserReq(id);
 
     final response = await CommonApiService.request(
         url: Api.baseUrl + Api.deleteUserData,
@@ -149,14 +149,29 @@ class UserManagementController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
         body: deleteUserData.toJson());
 
-if(response!.statusCode == 200){
-
-  getUserData();
-
-}
-
+    if (response!.statusCode == 200) {
+      getUserData();
+    }
   }
 
+  UserSIpData? sipData;
+  Future<void> getUserSipDetails(String id) async {
+    isUserSipDetailsLoading.value = true;
+    String token = box.read("token");
+
+    final response = await CommonApiService.request(
+        url: Api.baseUrl + Api.getUserParticularDetails,
+        requestType: RequestType.POST,
+        headers: {"Authorization": "Bearer $token"},
+        body: {"userId": id.toString()});
+    isUserSipDetailsLoading.value = false;
+    if (response!.statusCode == 200) {
+      sipData = UserSIpData.fromJson(jsonDecode(response.body));
+      log(name: "Sip Data", sipData!.user?.fullName ?? "");
+
+      Get.off(()=>     BaseLayout(content: UserAllDetails(data: sipData,),));
+    }
+  }
 
   @override
   void onInit() {

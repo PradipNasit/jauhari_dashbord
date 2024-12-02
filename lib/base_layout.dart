@@ -46,11 +46,11 @@ class _BaseLayoutState extends State<BaseLayout> {
                         homeController.sideBarOptions.length,
                             (index) => GestureDetector(
                           onTap: () {
-                            setState(() {
-                              homeController.selectedIndex.value = index;
-                              Get.to(()=> HomePage());
+
+                               homeController.selectedIndex.value = index;
                               homeController.update();
-                            });
+                              Get.off(HomePage());
+
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(

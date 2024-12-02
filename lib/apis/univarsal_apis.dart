@@ -12,4 +12,10 @@ class Api {
   static  const getSipData = "/get/all/sip-plans";
   static  const createBusiness = "/create/admin/company-information";
   static  const createSocialMedia = "/create/social-media";
+  static  const createCancellationPolicy = "/create/cancellation-policy";
+  static  const createTermsAndCondition = "/create/terms-and-conditions";
+  static  const privacyPolicy = "/create/privacy-policy";
+  static  const returnAndRefund = "/create/return-and-refund-policy";
+  static  const getUserParticularDetails = "/get/user/sip/details";
+  static  const withDrawSip = "/withdraw/sip";
 }

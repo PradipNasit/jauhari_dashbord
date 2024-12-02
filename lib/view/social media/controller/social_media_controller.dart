@@ -67,6 +67,10 @@ class SocialMediaController extends GetxController {
   }
 
 RxBool isSignInLoading = false.obs;
+RxBool isCancellationPolicyLoading = false.obs;
+RxBool isTermAndConditionLoading = false.obs;
+RxBool isPrivacyPolicyLoading = false.obs;
+RxBool isReturnAndRefundLoading = false.obs;
 
   CreateSocialMediaRequestModel createSocialMediaRequestModel () {
     return CreateSocialMediaRequestModel(platform: platFormController.text, link: platLinkController.text);
@@ -104,6 +108,127 @@ RxBool isSignInLoading = false.obs;
         fontSize: 14.0,
       );
       clearRequestModel();
+    } else {
+      print('Failed to send data: ${response?.statusCode}');
+    }
+  }
+
+
+
+  Future<void> createCancellationPolicy() async {
+    isCancellationPolicyLoading.value = true;
+    String token = box.read("token");
+
+
+    final response = await CommonApiService.request(
+      url: Api.baseUrl + Api.createCancellationPolicy,
+      requestType: RequestType.POST,
+      body: {
+        "content": cancellationPolicyController.toString()
+      },
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    isCancellationPolicyLoading.value = false;
+
+    if (response != null && response.statusCode == 201) {
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
+      cancellationPolicyController.clear();
+    } else {
+      print('Failed to send data: ${response?.statusCode}');
+    }
+  }
+
+
+  Future<void> createTermAndCondition() async {
+    isTermAndConditionLoading.value = true;
+    String token = box.read("token");
+
+
+    final response = await CommonApiService.request(
+      url: Api.baseUrl + Api.createTermsAndCondition,
+      requestType: RequestType.POST,
+      body: {
+        "content": tAndCController.toString()
+      },
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    isTermAndConditionLoading.value = false;
+
+    if (response != null && response.statusCode == 201) {
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
+      tAndCController.clear();
+    } else {
+      print('Failed to send data: ${response?.statusCode}');
+    }
+  }
+
+
+  Future<void> createPrivacyPolicy() async {
+    isPrivacyPolicyLoading.value = true;
+    String token = box.read("token");
+
+
+    final response = await CommonApiService.request(
+      url: Api.baseUrl + Api.privacyPolicy,
+      requestType: RequestType.POST,
+      body: {
+        "content": privacyPolicyController.toString()
+      },
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    isPrivacyPolicyLoading.value = false;
+
+    if (response != null && response.statusCode == 201) {
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
+      privacyPolicyController.clear();
+    } else {
+      print('Failed to send data: ${response?.statusCode}');
+    }
+  }
+
+
+  Future<void> createReturnAndRefund() async {
+    isReturnAndRefundLoading.value = true;
+    String token = box.read("token");
+
+
+    final response = await CommonApiService.request(
+      url: Api.baseUrl + Api.returnAndRefund,
+      requestType: RequestType.POST,
+      body: {
+        "content": refundAndReturnController.toString()
+      },
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    isReturnAndRefundLoading.value = false;
+
+    if (response != null && response.statusCode == 201) {
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
+      refundAndReturnController.clear();
     } else {
       print('Failed to send data: ${response?.statusCode}');
     }

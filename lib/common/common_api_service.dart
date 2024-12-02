@@ -28,7 +28,7 @@ class CommonApiService {
       switch (requestType) {
 
         case RequestType.GET:
-          response = await http.get(Uri.parse(url), headers: defaultHeaders);
+          response = await http.get(Uri.parse(url), headers: defaultHeaders );
           break;
         case RequestType.POST:
           response = await http.post(
