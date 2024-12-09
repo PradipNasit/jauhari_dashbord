@@ -45,8 +45,8 @@ class GetDashBordDataModel {
 }
 
 class TotalPayments {
-  int amount;
-  int count;
+  dynamic  amount;
+  dynamic count;
 
   TotalPayments({
     required this.amount,

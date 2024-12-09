@@ -59,7 +59,9 @@ class BannerSetUpController extends GetxController {
       reader.readAsArrayBuffer(file);
       reader.onLoadEnd.listen((event) {
         selectedFile.value = reader.result as Uint8List;
+        update();
       });
     });
+    update();
   }
 }

@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: (box.read("token") ?? "").isEmpty || box.read("token") == null ?LogInScreen(   ) : HomePage(),
+      home: (box.read("token") ?? "").isEmpty || box.read("token") == null ?LogInScreen(   ) : BaseLayout(navigatorKey:  GlobalKey<NavigatorState>()),
     );
   }
 }

@@ -92,7 +92,9 @@ class DynamicTable<T> extends StatelessWidget {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 decoration: BoxDecoration(
-                  color: index.isEven ? Colors.grey[200] : Colors.white,
+                  color: isEditable
+                      ? Colors.yellow.withOpacity(0.3) // Highlight color for edit mode
+                      : (index.isEven ? Colors.grey[200] : Colors.white),
                   borderRadius: BorderRadius.only(
                     bottomRight: index + 1 == data.length
                         ? const Radius.circular(12)
@@ -107,7 +109,7 @@ class DynamicTable<T> extends StatelessWidget {
                   children: [
                     // Editable Text Fields
                     ...valueExtractors.asMap().entries.map(
-                      (extractorEntry) {
+                          (extractorEntry) {
                         final extractorIndex = extractorEntry.key;
                         final extractor = extractorEntry.value;
 
@@ -122,13 +124,11 @@ class DynamicTable<T> extends StatelessWidget {
                               ),
                               onChanged: (value) {
                                 if (onChanged != null) {
-                                  onChanged![extractorIndex](
-                                      item, index, value);
+                                  onChanged![extractorIndex](item, index, value);
                                   log(name: "DropDownValue", value.toString());
                                 }
                               },
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none),
+                              decoration: const InputDecoration(border: InputBorder.none),
                               style: const TextStyle(fontSize: 15),
                             ),
                           ),
@@ -153,7 +153,7 @@ class DynamicTable<T> extends StatelessWidget {
                             ),
                             backgroundColor: ColorHelper.elevatedButtonColor,
                           ),
-                          child:  CommonText(
+                          child: CommonText(
                             text: "View",
                             color: Colors.white,
                           ),
@@ -183,9 +183,8 @@ class DynamicTable<T> extends StatelessWidget {
                             },
                           ),
                           IconButton(
-                            icon:  Icon(Icons.delete, color: Colors.red.withOpacity(0.7)),
-                            onPressed:
-                                onDelete != null ? () => onDelete!(item) : null,
+                            icon: Icon(Icons.delete, color: Colors.red.withOpacity(0.7)),
+                            onPressed: onDelete != null ? () => onDelete!(item) : null,
                           ),
                         ],
                       ),
@@ -194,6 +193,7 @@ class DynamicTable<T> extends StatelessWidget {
                 ),
               );
             });
+
           }).toList(),
         ],
       ),

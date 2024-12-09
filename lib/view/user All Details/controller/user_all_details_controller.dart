@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:jauhari_dashbord/apis/univarsal_apis.dart';
 import 'package:jauhari_dashbord/common/common_api_service.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/controller/user_management_controller.dart';
@@ -16,10 +17,7 @@ class UserAllDetailsController extends GetxController {
         "title": "User Name",
         "totalValue": userDetailsController.sipData?.user?.fullName ?? "No Name"
       },
-      {
-        "title": "User ID",
-        "totalValue":  ""
-      },
+      {"title": "User ID", "totalValue": ""},
       {
         "title": "Mobile",
         "totalValue":
@@ -31,18 +29,22 @@ class UserAllDetailsController extends GetxController {
             userDetailsController.sipData?.user?.aadharCard.toString() ?? ""
       },
       {
-        "title": "Total Amount Invested Across All GSPs Till Last Payment Date",
+        "title": "Total Amount Invested",
         "totalValue": userDetailsController.sipData?.user?.totalInvestment
                 ?.toStringAsFixed(2) ??
             ""
       },
       {
-        "title": "Total Gold Bought Across all GSPs Till Last Payment Date",
+        "title": "Current Balance",
         "totalValue": userDetailsController.sipData?.user?.totalGramsAccumulated
                 ?.toStringAsFixed(2) ??
             ""
       },
-      {"title": "Date of Registration", "totalValue": "1/1/2024"},
+      {
+        "title": "Date of Registration",
+        "totalValue": DateFormat("dd/MM/yyyy").format(DateTime.parse(
+            userDetailsController.sipData?.user?.createdAt.toString() ?? ""))
+      },
       {
         "title": "Pan card no.",
         "totalValue":
@@ -56,7 +58,6 @@ class UserAllDetailsController extends GetxController {
     {"title": "User History", "totalValue": "user12458"},
     {"title": "Withdraw Gold", "totalValue": "9536 254 235"},
   ];
-
 
   final box = GetStorage();
   RxBool isWithDrawLoading = false.obs;

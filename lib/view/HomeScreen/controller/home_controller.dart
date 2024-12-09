@@ -45,14 +45,14 @@ class HomeScreenController extends GetxController {
       {
         "title": "Total Payment",
         "icon": "",
-        "totalValue": dashBordModel?.totalPayments.amount.toString()
+        "totalValue": double.parse(dashBordModel!.totalPayments.amount.toString()).toStringAsFixed(2)
       },
       {"title": "Missed Payments", "icon": "", "totalValue": "12"},
       {
         "title": "Total Gold Accumulated",
         "icon": "",
         "totalValue": double.parse(
-                dashBordModel?.totalGoldAccumulated.toString() ?? "0.0")
+                dashBordModel?.totalGoldAccumulated.toStringAsFixed(3) ?? "0.0")
             .toStringAsFixed(2)
       },
     ];
@@ -83,18 +83,18 @@ class HomeScreenController extends GetxController {
         return ResponsiveLayout(deskTopView: NotificationScreen());
 
       default:
-        return Center(child: Text('No view available'));
+        return const Center(child: Text('No view available'));
     }
   }
 
   List<Map<String, dynamic>> sideBarOptions = [
-    {"title": "Dashboard"},
-    {"title": "User Management"},
-    {"title": "Payments Overview"},
-    {"title": "Business Setup"},
-    {"title": "Pages and Social Media"},
-    {"title": "Banner Setup"},
-    {"title": "Notifications"},
+    {"title": "Dashboard" , "icon":"assets/icons/dashbord_icon.svg" , "route": "/home"},
+    {"title": "User Management", "icon":"assets/icons/user_man_icon.svg" , "route": "/userManagement"},
+    {"title": "Recent Transactions", "icon":"assets/icons/rec_tran_icon.svg" , "route": "/recentTransactions"},
+    {"title": "Business Setup", "icon":"assets/icons/busimess_icon.svg",  "route": "/businessSetup"},
+    {"title": "Pages and Media", "icon":"assets/icons/pages_media_icon.svg" , "route": "/Pages and Media"},
+    {"title": "Banner Setup", "icon":"assets/icons/banner_set_icon.svg",  "route": "/bannerSetup"},
+    {"title": "Notifications", "icon":"assets/icons/noti_icon.svg","route": "/notifications"},
   ];
 
   final box = GetStorage();

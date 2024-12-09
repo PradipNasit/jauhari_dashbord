@@ -113,7 +113,6 @@ class UserManagementController extends GetxController {
   Future<void> editUserData(String id) async {
     final token = box.read("token");
     final reqData = editReqData(id);
-    log(name: "editUserReqbopdy", reqData.tojson().toString());
 
     final response = await CommonApiService.request(
         url: Api.baseUrl + Api.editUserData,
@@ -121,10 +120,9 @@ class UserManagementController extends GetxController {
         headers: {"Authorization": "Bearer $token"},
         body: reqData.tojson());
     log(name: "editUserdata", response!.body.toString());
+    getUserData();
 
-    if (response?.statusCode == 200) {
-      getUserData();
-    }
+    if (response?.statusCode == 200) {}
   }
 
   Future<void> editSipStatusData(String id, String status) async {
@@ -148,13 +146,16 @@ class UserManagementController extends GetxController {
         requestType: RequestType.DELETE,
         headers: {"Authorization": "Bearer $token"},
         body: deleteUserData.toJson());
+    getUserData();
 
-    if (response!.statusCode == 200) {
-      getUserData();
-    }
+    if (response!.statusCode == 200) {}
   }
 
   UserSIpData? sipData;
+
+
+
+
   Future<void> getUserSipDetails(String id) async {
     isUserSipDetailsLoading.value = true;
     String token = box.read("token");
@@ -169,7 +170,7 @@ class UserManagementController extends GetxController {
       sipData = UserSIpData.fromJson(jsonDecode(response.body));
       log(name: "Sip Data", sipData!.user?.fullName ?? "");
 
-      Get.off(()=>     BaseLayout(content: UserAllDetails(data: sipData,),));
+
     }
   }
 

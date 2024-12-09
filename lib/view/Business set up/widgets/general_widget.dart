@@ -47,7 +47,7 @@ Widget generalWidget(
               ),
             ),
             Container(
-              height: height,
+              height: 450,
               width: width,
               padding: const EdgeInsets.all(26),
               margin: const EdgeInsets.only(top: 40, bottom: 20),
@@ -75,6 +75,9 @@ Widget generalWidget(
                     height: 6,
                   ),
                   const Divider(),
+                  const SizedBox(
+                    height: 6,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

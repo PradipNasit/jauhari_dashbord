@@ -35,39 +35,6 @@ class HomePageDesktopView extends StatelessWidget {
                         children: [
                           Flexible(child: CommonTextField(hintText: "Search")),
                           const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: CommonText(text: "Create sip plans" , ),
-                                  content:
-                                      CommonTextField(hintText: "Enter Amount" ,controller: controller.sipAmount,),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          controller.createSipPlans();
-
-                                        },
-                                        child: CommonText(text: "create"))
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              margin: const EdgeInsets.only(right: 10),
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: ColorHelper.brownColor,
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
                           Container(
                             height: 50,
                             width: 50,

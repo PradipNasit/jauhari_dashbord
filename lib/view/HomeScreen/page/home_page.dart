@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jauhari_dashbord/base_layout.dart';
 import 'package:jauhari_dashbord/view/HomeScreen/controller/home_controller.dart';
+import 'package:jauhari_dashbord/view/HomeScreen/widgets/home_page_desktop_view.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -13,9 +14,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeScreenController>(builder: (_) {
-      return BaseLayout(
-          content: homeController.buildResponsiveView(
-              homeController.selectedIndex.value, homeController));
+      return HomePageDesktopView(controller: homeController);
     });
   }
 }

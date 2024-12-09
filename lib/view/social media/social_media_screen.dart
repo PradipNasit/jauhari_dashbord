@@ -53,7 +53,10 @@ class SocialMediaScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: Get.height * 0.06),
-                TabBar(tabs: [
+                TabBar(
+                    dividerColor: Colors.transparent,
+                    indicatorColor: ColorHelper.brownColor,
+                    tabs: [
                   CommonText(text: "Terms and Conditions"),
                   CommonText(text: "Privacy Policy"),
                   CommonText(text: "Cancellation Policy"),

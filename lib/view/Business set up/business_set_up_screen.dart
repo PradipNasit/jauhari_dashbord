@@ -4,7 +4,6 @@ import 'package:jauhari_dashbord/Helper/color_helper.dart';
 import 'package:jauhari_dashbord/common/common_text_field.dart';
 import 'package:jauhari_dashbord/common/common_text_widget.dart';
 import 'package:jauhari_dashbord/view/Business%20set%20up/controller/business_set_up_controller.dart';
-
 import 'widgets/general_widget.dart';
 
 class BusinessSetUpScreen extends StatelessWidget {
@@ -35,7 +34,7 @@ class BusinessSetUpScreen extends StatelessWidget {
                         hintText: "Search",
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
                       height: 50,
                       width: 50,
@@ -51,6 +50,8 @@ class BusinessSetUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: Get.height * 0.06),
                 TabBar(
+                  dividerColor: Colors.transparent,
+                    indicatorColor: ColorHelper.brownColor,
                     tabs: [
                   CommonText(text: "General"),
                   CommonText(text: "Payment Option"),
@@ -63,10 +64,10 @@ class BusinessSetUpScreen extends StatelessWidget {
                   height: Get.height,
                   child: TabBarView(children: [
                     generalWidget(context: context ,controller: businessSetUpController),
-                    generalWidget(context: context,controller: businessSetUpController),
-                    generalWidget(context: context,controller: businessSetUpController),
-                    generalWidget(context: context,controller: businessSetUpController),
-                    generalWidget(context: context,controller: businessSetUpController),
+                  Center(child: CommonText(text: "Curretly Unavilailable")),
+                  Center(child: CommonText(text: "Curretly Unavilailable")),
+                  Center(child: CommonText(text: "Curretly Unavilailable")),
+                  Center(child: CommonText(text: "Curretly Unavilailable")),
                   ]),
                 )
               ],

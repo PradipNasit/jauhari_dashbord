@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,11 +94,18 @@ class UserManagementDesktopView extends StatelessWidget {
                           userManagementController.emailctr.text = value;
                         },
                       ],
+                          onViewButtonPressed: (p0)  {
+                             userManagementController.getUserSipDetails(p0.id.toString());
 
-                          onViewButtonPressed: (p0) {
-
-                        userManagementController.getUserSipDetails(p0.id.toString());
-                        // Get.to(()=> UserAllDetails());
+                            // Navigate to the UserAllDetails screen after data is fetched
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => UserAllDetails(
+                                  data: userManagementController.sipData,
+                                  controller: userManagementController,
+                                ),
+                              ),
+                            );
                           },
                       onDelete: (p0) {
                         userManagementController
@@ -123,8 +128,6 @@ class UserManagementDesktopView extends StatelessWidget {
           ),
         ],
       ),
-
-
 
     );
   }
