@@ -43,7 +43,7 @@ Future<void> signIn() async {
   if (response != null && response.statusCode == 200) {
     box.write("token", jsonDecode(response.body)['token']);
 
-    Get.to(()=> HomePage());
+    // Get.to(()=> HomePage());
 
     log(name: "Token", box.read("token"));
 

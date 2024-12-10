@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -11,42 +15,49 @@ class UserAllDetailsController extends GetxController {
 
   final userDetailsController = Get.put(UserManagementController());
 
-  List<Map<String, String>> userDetailsValue() {
+  List<Map<String, dynamic>> get userDetailsValue {
     return [
       {
         "title": "User Name",
+        "icon": Icons.drive_file_rename_outline,
         "totalValue": userDetailsController.sipData?.user?.fullName ?? "No Name"
       },
-      {"title": "User ID", "totalValue": ""},
+      {"title": "User ID", "totalValue": "", "icon": Icons.perm_identity},
       {
         "title": "Mobile",
+        "icon": Icons.phone_android,
         "totalValue":
             userDetailsController.sipData?.user?.mobileNumber.toString() ?? ""
       },
       {
         "title": "Adhar card no.",
+        "icon": Icons.credit_card_sharp,
         "totalValue":
             userDetailsController.sipData?.user?.aadharCard.toString() ?? ""
       },
       {
         "title": "Total Amount Invested",
+        "icon": Icons.currency_rupee,
         "totalValue": userDetailsController.sipData?.user?.totalInvestment
                 ?.toStringAsFixed(2) ??
             ""
       },
       {
         "title": "Current Balance",
+        "icon": Icons.wallet,
         "totalValue": userDetailsController.sipData?.user?.totalGramsAccumulated
                 ?.toStringAsFixed(2) ??
             ""
       },
       {
         "title": "Date of Registration",
+        "icon": Icons.date_range,
         "totalValue": DateFormat("dd/MM/yyyy").format(DateTime.parse(
             userDetailsController.sipData?.user?.createdAt.toString() ?? ""))
       },
       {
         "title": "Pan card no.",
+        "icon": Icons.credit_card_sharp,
         "totalValue":
             userDetailsController.sipData?.user?.panCard.toString() ?? ""
       },
@@ -76,12 +87,12 @@ class UserAllDetailsController extends GetxController {
     isWithDrawLoading.value = false;
 
     if (response != null && response.statusCode == 200) {
-      // Fluttertoast.showToast(
-      //   msg: jsonDecode(response.body)["message"].toString(),
-      //   toastLength: Toast.LENGTH_SHORT,
-      //   gravity: ToastGravity.SNACKBAR,
-      //   fontSize: 14.0,
-      // );
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
       // privacyPolicyController.clear();
     } else {
       print('Failed to send data: ${response?.statusCode}');

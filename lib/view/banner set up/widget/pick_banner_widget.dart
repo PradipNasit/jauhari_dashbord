@@ -92,6 +92,7 @@ Widget pickBannerWidget({required BannerSetUpController controller}) {
                         onTap: () {
                           if (controller.selectedBannerType.value.isNotEmpty &&
                               controller.selectedFile.value != null) {
+                            controller.uploadFile(controller.selectedFile.value!, controller.fileName.value);
                             controller.addBanner(
                               controller.selectedBannerType.value,
                               controller.selectedFile.value,

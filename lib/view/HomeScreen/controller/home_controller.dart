@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jauhari_dashbord/apis/univarsal_apis.dart';
@@ -29,34 +30,39 @@ class HomeScreenController extends GetxController {
     return [
       {
         "title": "Total Users",
-        "icon": "",
-        "totalValue": dashBordModel?.totalUsers.toString() ?? "0"
+        "icon": Icons.person,
+        "totalValue": dashBordModel?.totalUsers.toString() ?? "0",
       },
       {
         "title": "Active SIPs",
-        "icon": "",
-        "totalValue": dashBordModel?.activeSiPs.toString()
+        "icon": Icons.sip_outlined,
+        "totalValue": dashBordModel?.activeSiPs.toString() ?? "0",
       },
       {
         "title": "Completed SIPs",
-        "icon": "",
-        "totalValue": dashBordModel?.completedSiPs.toString()
+        "icon": Icons.sip,
+        "totalValue": dashBordModel?.completedSiPs.toString() ?? "0",
       },
       {
         "title": "Total Payment",
-        "icon": "",
-        "totalValue": double.parse(dashBordModel!.totalPayments.amount.toString()).toStringAsFixed(2)
+        "icon": Icons.currency_rupee,
+        "totalValue": double.parse(dashBordModel?.totalPayments?.amount.toString() ?? "0.0")
+            .toStringAsFixed(2),
       },
-      {"title": "Missed Payments", "icon": "", "totalValue": "12"},
+      {
+        "title": "Missed Payments",
+        "icon": Icons.warning, // Use a valid fallback icon
+        "totalValue": "12",
+      },
       {
         "title": "Total Gold Accumulated",
-        "icon": "",
-        "totalValue": double.parse(
-                dashBordModel?.totalGoldAccumulated.toStringAsFixed(3) ?? "0.0")
-            .toStringAsFixed(2)
+        "icon": Icons.currency_rupee,
+        "totalValue": double.parse(dashBordModel?.totalGoldAccumulated?.toStringAsFixed(3) ?? "0.0")
+            .toStringAsFixed(2),
       },
     ];
   }
+
 
   buildResponsiveView(int option, HomeScreenController controller) {
     switch (option) {

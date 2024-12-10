@@ -14,11 +14,13 @@ import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_details_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_sip_model.dart';
-import 'package:jauhari_dashbord/view/user%20All%20Details/view/user_all_details.dart';
 
 class UserManagementController extends GetxController {
   final box = GetStorage();
   RxBool isUserSipDetailsLoading = false.obs;
+
+
+  final otpController = TextEditingController();
 
   final userSearchController = TextEditingController();
 

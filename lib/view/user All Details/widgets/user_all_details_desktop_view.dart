@@ -77,7 +77,7 @@ Widget userAllDetailsDesktopView(
                             runSpacing: 10,
                             spacing: 10,
                             children: List.generate(
-                              controller!.userDetailsValue().length,
+                              controller!.userDetailsValue.length,
                               (index) => Container(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 20),
@@ -89,12 +89,12 @@ Widget userAllDetailsDesktopView(
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.person_2_outlined),
+                                     Icon(controller.userDetailsValue[index]["icon"]),
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: CommonText(
                                         text: controller
-                                            .userDetailsValue()[index]['title']
+                                            .userDetailsValue[index]['title']
                                             .toString(),
                                         fontSize: 14,
                                         maxLines: 3,
@@ -103,7 +103,7 @@ Widget userAllDetailsDesktopView(
                                     const SizedBox(width: 15),
                                     CommonText(
                                       text: controller
-                                          .userDetailsValue()[index]
+                                          .userDetailsValue[index]
                                               ['totalValue']
                                           .toString(),
                                       fontSize: 16,
@@ -161,7 +161,7 @@ Widget userAllDetailsDesktopView(
                               alignment: Alignment.center,
                               child: Container(
                                 width: Get.width * 0.4,
-                                margin: EdgeInsets.only(top: 120),
+                                margin: const EdgeInsets.only(top: 120),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 20),
                                 decoration: const BoxDecoration(

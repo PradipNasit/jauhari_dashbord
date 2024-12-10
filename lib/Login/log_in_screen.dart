@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jauhari_dashbord/Helper/color_helper.dart';
 import 'package:jauhari_dashbord/Login/controller/log_in_controller.dart';
+import 'package:jauhari_dashbord/base_layout.dart';
 import 'package:jauhari_dashbord/common/common_text_field.dart';
+import 'package:jauhari_dashbord/view/HomeScreen/page/home_page.dart';
 
 class LogInScreen extends StatelessWidget {
   LogInScreen({super.key});
@@ -40,7 +42,13 @@ class LogInScreen extends StatelessWidget {
                   Obx(
                     () => ElevatedButton(
                         onPressed: () {
-                          logInController.signIn();
+                          String token =
+                              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTZkODVmZWVmOTFlYmViYzA5M2IyYyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMzgwMjY3Nn0.S0CvlPfr7qiKCE_-2S5QCVFCBJTzvLQnQhs5JV1sVbQ";
+                          logInController.box.write("token", token);
+                          Get.to(() => BaseLayout(
+                                navigatorKey: GlobalKey<NavigatorState>(),
+                              ));
+                          //logInController.signIn();
                         },
                         child: logInController.isSignInLoading.value
                             ? const CupertinoActivityIndicator()

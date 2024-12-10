@@ -18,4 +18,6 @@ class Api {
   static  const returnAndRefund = "/create/return-and-refund-policy";
   static  const getUserParticularDetails = "/get/user/sip/details";
   static  const withDrawSip = "/withdraw/sip";
+  static  const createFaq = "/create/faq";
+  static  const getFaq = "/get/all/faq";
 }

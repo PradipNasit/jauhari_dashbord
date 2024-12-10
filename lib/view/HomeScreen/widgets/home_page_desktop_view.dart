@@ -74,8 +74,9 @@ class HomePageDesktopView extends StatelessWidget {
                                             BorderRadius.circular(12)),
                                     child: Row(
                                       children: [
-                                        const Icon(
-                                          Icons.person_2_outlined,
+                                         Icon(
+                                          controller.homeOptions[index]
+                                          ["icon"],
                                         ),
                                         const SizedBox(
                                           width: 10,

@@ -1,4 +1,4 @@
-import 'package:data_table_2/data_table_2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jauhari_dashbord/Helper/color_helper.dart';
@@ -6,58 +6,55 @@ import 'package:jauhari_dashbord/common/common_text_field.dart';
 import 'package:jauhari_dashbord/common/common_text_widget.dart';
 import 'package:jauhari_dashbord/view/social%20media/controller/social_media_controller.dart';
 
-
-Widget faqWidget({
-  required SocialMediaController controller,
-  required BuildContext context
-}){
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Column(
+Widget faqWidget(
+    {required SocialMediaController controller,
+    required BuildContext context}) {
+  return Obx(
+   () => controller.isGetFaq.value ? const CupertinoActivityIndicator(color: Colors.black,) :Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Text("Help Topic Table", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-               const  Spacer(),
+                const Text("Help Topic Table",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Spacer(),
                 ElevatedButton.icon(
                   onPressed: () {
-                    controller.isFaqPopUpShow.value = true;
+                    controller.isFaqPopUpShow.value =
+                        !controller.isFaqPopUpShow.value;
                     controller.update();
                     // Add your logic for adding FAQs
                   },
-                  icon:const  Icon(Icons.add,color: Colors.white,),
-                  label: const Text("Add FAQ",style: TextStyle(color: Colors.white),),
-                  style: ElevatedButton.styleFrom(backgroundColor: ColorHelper.brownColor),
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    "Add FAQ",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorHelper.brownColor),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-
-            Divider(),
+            const Divider(),
             const SizedBox(height: 10),
             Row(
               children: [
-                const Text("Show"),
-               const  SizedBox(width: 10),
-                DropdownButton<int>(
-                  value: 10,
-                  items: [5, 10, 20].map((e) => DropdownMenuItem(value: e, child: Text(e.toString()))).toList(),
-                  onChanged: (value) {
-                    // Handle dropdown change
-                  },
-                ),
-               const  Spacer(),
+                const SizedBox(width: 10),
                 const Text("Search: "),
                 SizedBox(
                   width: 200,
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: "Enter Keywords",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
                       isDense: true,
                     ),
                     onChanged: controller.searchFAQ,
@@ -65,145 +62,103 @@ Widget faqWidget({
                 ),
               ],
             ),
-           const  SizedBox(height: 20),
-
-          ],
-        ),
-        Obx(() {
-          return controller!.isFaqPopUpShow.value
-              ? Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: Get.width * 0.4,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: const BoxDecoration(
-                color: ColorHelper.brownColor,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset("assets/images/logo.png"),
-                  const SizedBox(height: 20),
-                  Container(
-                    height: 140,
-                    width: 320,
-                    alignment: Alignment.center,
+            const SizedBox(height: 20),
+        
+        
+        
+            Obx(() => controller.isFaqPopUpShow.value
+                ? Container(
+                    height: 280,
+                    width: Get.width,
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CommonText(
-                          text: "Available Gold Balance ",
-                          fontSize: 20,
-                          color: Colors.white,
+                          text: "Question",
+                          color: ColorHelper.brownColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.grid_goldenratio,
-                              color: ColorHelper.goldYellowColor,
-                            ),
-                            CommonText(
-                              text: "5.8 Gm",
-                              fontSize: 32,
-                              color: ColorHelper.goldYellowColor,
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 16,
                         ),
+                        CommonTextField(
+                          hintText: "",
+                          controller: controller.questionController,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        CommonText(
+                          text: "Answer",
+                          color: ColorHelper.brownColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        CommonTextField(
+                          hintText: "",
+                          controller: controller.answerController,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            controller.createFaq();
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 80,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: ColorHelper.brownColor,
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Obx(() => controller.isFaqLoading.value
+                                ? const CupertinoActivityIndicator(color: Colors.white,)
+                                : CommonText(
+                                    text: "Submit",
+                                    color: Colors.white,
+                                  )),
+                          ),
+                        )
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  CommonText(
-                    text: "Withdraw Gold (Enter in gm)",
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width : 250,
-                    child: CommonTextField(
-                      hintText: "Enter weight",
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-
-                      ///
-
-                      ///
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 250,
-                      margin: const EdgeInsets.only(top: 15),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: ColorHelper.yellowColor,
-                      ),
-                      child: CommonText(
-                        text: "Withdraw",
-                        color: Colors.white,
-                      ),
-                    ),
                   )
+                : const SizedBox()),
+        
+        
+        
+            const SizedBox(height: 20),
+          Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 16, // Horizontal spacing between containers
+              runSpacing: 16,
+            children: List.generate(controller.filteredList.length, (index) {
+            return Container(
+              width: Get.width / 3,
+              padding:const  EdgeInsets.all(16),
+              decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(12)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CommonText(text: controller.filteredList[index].question,fontSize: 16,fontWeight: FontWeight.w600,maxLines: 5,),
+                  SizedBox(height: 6,),
+                  CommonText(text: controller.filteredList[index].answer,fontSize: 16,maxLines: 6,),
                 ],
               ),
-            ),
-          )
-              : const SizedBox();
-        }),
-      ],
-    ),
-  );
-}
-// Show Edit Dialog
-void _showEditDialog(BuildContext context, SocialMediaController controller, int index) {
-  final TextEditingController questionController = TextEditingController(text: controller.filteredList[index]["question"]);
-  final TextEditingController answerController = TextEditingController(text: controller.filteredList[index]["answer"]);
-
-  showDialog(
-    context: context,
-    builder: (ctx) {
-      return AlertDialog(
-        title: const Text("Edit FAQ"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: questionController,
-              decoration: const InputDecoration(labelText: "Question"),
-            ),
-            TextField(
-              controller: answerController,
-              decoration: const InputDecoration(labelText: "Answer"),
-            ),
+        
+            );
+          },),)
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              controller.editFAQ(
-                index,
-                questionController.text,
-                answerController.text,
-              );
-              Navigator.of(ctx).pop();
-            },
-            child:const  Text("Save"),
-          ),
-        ],
-      );
-    },
+      ),
+    ),
   );
 }

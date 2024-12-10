@@ -14,6 +14,7 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorHelper.containerBgColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
