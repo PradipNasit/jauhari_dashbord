@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:jauhari_dashbord/Helper/color_helper.dart';
 import 'package:jauhari_dashbord/common/common_text_field.dart';
@@ -17,6 +20,8 @@ Widget userAllDetailsDesktopView(
     backgroundColor: ColorHelper.containerBgColor,
     body: GestureDetector(
       onTap: () {
+        controller!.isGoldWithdrawPopUpShow.value = false;
+        controller.isOTPPopUpShow.value = false;
         //  Close the popup when tapping outside
         if (controller!.isGoldWithdrawPopUpShow.value) {
           controller.isGoldWithdrawPopUpShow.value = false;
@@ -89,12 +94,13 @@ Widget userAllDetailsDesktopView(
                                 ),
                                 child: Row(
                                   children: [
-                                     Icon(controller.userDetailsValue[index]["icon"]),
+                                    Icon(controller.userDetailsValue[index]
+                                        ["icon"]),
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: CommonText(
-                                        text: controller
-                                            .userDetailsValue[index]['title']
+                                        text: controller.userDetailsValue[index]
+                                                ['title']
                                             .toString(),
                                         fontSize: 14,
                                         maxLines: 3,
@@ -102,8 +108,7 @@ Widget userAllDetailsDesktopView(
                                     ),
                                     const SizedBox(width: 15),
                                     CommonText(
-                                      text: controller
-                                          .userDetailsValue[index]
+                                      text: controller.userDetailsValue[index]
                                               ['totalValue']
                                           .toString(),
                                       fontSize: 16,
@@ -129,9 +134,85 @@ Widget userAllDetailsDesktopView(
                               controller.options.length,
                               (index) => GestureDetector(
                                 onTap: () {
-                                  controller.isGoldWithdrawPopUpShow.value =
-                                      !controller.isGoldWithdrawPopUpShow.value;
-                                  controller.update();
+                                  if (index == 2) {
+                                    log(
+                                        name: "Gold Balance",
+                                        userManagementController.sipData?.user
+                                                ?.totalGramsAccumulated!
+                                                .toStringAsFixed(3)
+                                                .toString() ??
+                                            "0000");
+                                    if (userManagementController.sipData?.user
+                                            ?.totalGramsAccumulated ==
+                                        0.000) {
+                                      Fluttertoast.showToast(
+                                        msg: "Insufficient Gold Balance",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.SNACKBAR,
+                                        fontSize: 14.0,
+                                      );
+                                    } else {
+                                      controller.isGoldWithdrawPopUpShow.value =
+                                          !controller
+                                              .isGoldWithdrawPopUpShow.value;
+                                    }
+                                    controller.update();
+                                  } else if (index == 3) {
+                                    if (userManagementController.sipData?.user
+                                        ?.totalGramsAccumulated ==
+                                        0.000) {
+                                      Fluttertoast.showToast(
+                                        msg: "Insufficient Gold Balance",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.SNACKBAR,
+                                        fontSize: 14.0,
+                                      );
+                                    }
+                                  else {
+
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              CommonText(
+                                                text: "Add Amount",
+                                                color: ColorHelper.brownColor,
+                                                fontSize: 16,
+                                              ),
+
+                                            ],
+                                          ),
+                                          content: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CommonTextField(hintText: "",controller: controller.amountController,),
+                                              const SizedBox(height: 10,),
+                                              CommonText(text: "Add note",color: ColorHelper.brownColor,),
+                                              const SizedBox(height: 6,),
+                                              CommonTextField(hintText: "",controller: controller.noteController,),
+                                            ],
+                                          ),
+                                          actions: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                controller.addGoldManually();
+                                                Navigator.pop(context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  ColorHelper.brownColor),
+                                              child: CommonText(
+                                                text:"Submit",color: Colors.white,),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  }
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
@@ -140,13 +221,18 @@ Widget userAllDetailsDesktopView(
                                   width: 300,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: index == 2 || index == 3
+                                        ? ColorHelper.brownColor
+                                        : Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: CommonText(
                                     text: controller.options[index]['title'],
                                     fontSize: 14,
                                     maxLines: 3,
+                                    color: index == 2 || index == 3
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
                               ),
@@ -221,13 +307,6 @@ Widget userAllDetailsDesktopView(
                                       text: "Withdraw Gold (Enter in gm)",
                                       fontSize: 20,
                                       color: Colors.white,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    SizedBox(
-                                      width: 250,
-                                      child: CommonTextField(
-                                        hintText: "Enter weight",
-                                      ),
                                     ),
                                     GestureDetector(
                                       onTap: () {
@@ -316,7 +395,7 @@ Widget userAllDetailsDesktopView(
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     )
                   ],
                 ),

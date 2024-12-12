@@ -20,4 +20,6 @@ class Api {
   static  const withDrawSip = "/withdraw/sip";
   static  const createFaq = "/create/faq";
   static  const getFaq = "/get/all/faq";
+  static  const editFaq = "/update/faq";
+  static  const addGoldManually = "/add/amount/sip/amount";
 }

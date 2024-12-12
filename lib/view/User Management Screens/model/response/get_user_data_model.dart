@@ -9,18 +9,18 @@ List<GetUserDataModel> getUserDataNoidelFromJson(String str) => List<GetUserData
 String getUserDataNoidelToJson(List<GetUserDataModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class GetUserDataModel {
-  String id;
-  String fullName;
+  String? id;
+  String? fullName;
   int mobileNumber;
-  String email;
+  String? email;
   int aadharCard;
-  String panCard;
-  String nomineeName;
-  String role;
+  String? panCard;
+  String? nomineeName;
+  String? role;
   DateTime createdAt;
   DateTime updatedAt;
   int v;
-  String sipStatus;
+  String? sipStatus;
   int? nomineeNumber;
 
   GetUserDataModel({

@@ -40,163 +40,165 @@ class DynamicTable<T> extends StatelessWidget {
         border: Border.all(color: ColorHelper.textFieldFillColor),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Table Headers
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Row(
-              children: [
-                ...headers
-                    .map(
-                      (header) => Expanded(
-                        child: Center(
-                          child: Text(
-                            header,
-                            style: const TextStyle(
-                                color: ColorHelper.switchTextColor,
-                                fontSize: 15),
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Table Headers
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Row(
+                children: [
+                  ...headers
+                      .map(
+                        (header) => Expanded(
+                          child: Center(
+                            child: Text(
+                              header,
+                              style: const TextStyle(
+                                  color: ColorHelper.switchTextColor,
+                                  fontSize: 15),
+                            ),
                           ),
                         ),
+                      )
+                      .toList(),
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        'View',
+                        style: TextStyle(color: ColorHelper.switchTextColor),
                       ),
-                    )
-                    .toList(),
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      'View',
-                      style: TextStyle(color: ColorHelper.switchTextColor),
                     ),
                   ),
-                ),
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      'Edit/Delete',
-                      style: TextStyle(color: ColorHelper.switchTextColor),
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        'Edit/Delete',
+                        style: TextStyle(color: ColorHelper.switchTextColor),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          // Table Rows
-          ...data.asMap().entries.map((entry) {
-            int index = entry.key;
-            T item = entry.value;
+            // Table Rows
+            ...data.asMap().entries.map((entry) {
+              int index = entry.key;
+              T item = entry.value;
 
-            return Obx(() {
-              bool isEditable = editingRowIndex.value == index;
+              return Obx(() {
+                bool isEditable = editingRowIndex.value == index;
 
-              return Container(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                decoration: BoxDecoration(
-                  color: isEditable
-                      ? Colors.yellow.withOpacity(0.3) // Highlight color for edit mode
-                      : (index.isEven ? Colors.grey[200] : Colors.white),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: index + 1 == data.length
-                        ? const Radius.circular(12)
-                        : const Radius.circular(0),
-                    bottomLeft: index + 1 == data.length
-                        ? const Radius.circular(12)
-                        : const Radius.circular(0),
+                return Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  decoration: BoxDecoration(
+                    color: isEditable
+                        ? Colors.yellow.withOpacity(0.3) // Highlight color for edit mode
+                        : (index.isEven ? Colors.grey[200] : Colors.white),
+                    borderRadius: BorderRadius.only(
+                      bottomRight: index + 1 == data.length
+                          ? const Radius.circular(12)
+                          : const Radius.circular(0),
+                      bottomLeft: index + 1 == data.length
+                          ? const Radius.circular(12)
+                          : const Radius.circular(0),
+                    ),
                   ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Editable Text Fields
-                    ...valueExtractors.asMap().entries.map(
-                          (extractorEntry) {
-                        final extractorIndex = extractorEntry.key;
-                        final extractor = extractorEntry.value;
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Editable Text Fields
+                      ...valueExtractors.asMap().entries.map(
+                            (extractorEntry) {
+                          final extractorIndex = extractorEntry.key;
+                          final extractor = extractorEntry.value;
 
-                        return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              readOnly: !isEditable,
-                              controller: TextEditingController(
-                                text: extractor(item),
+                          return Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                readOnly: !isEditable,
+                                controller: TextEditingController(
+                                  text: extractor(item),
+                                ),
+                                onChanged: (value) {
+                                  if (onChanged != null) {
+                                    onChanged![extractorIndex](item, index, value);
+                                    log(name: "DropDownValue", value.toString());
+
+                                  }
+                                },
+                                decoration: const InputDecoration(border: InputBorder.none),
+                                style: const TextStyle(fontSize: 15),
                               ),
-                              onChanged: (value) {
-                                if (onChanged != null) {
-                                  onChanged![extractorIndex](item, index, value);
-                                  log(name: "DropDownValue", value.toString());
-                                }
-                              },
-                              decoration: const InputDecoration(border: InputBorder.none),
-                              style: const TextStyle(fontSize: 15),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-
-                    // View Button
-                    Expanded(
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (onViewButtonPressed != null) {
-                              onViewButtonPressed!(item); // Properly invoke the callback
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            backgroundColor: ColorHelper.elevatedButtonColor,
-                          ),
-                          child: CommonText(
-                            text: "View",
-                            color: Colors.white,
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    ),
 
-                    // Edit/Delete Actions
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              isEditable ? Icons.check : Icons.edit,
-                              color: isEditable ? Colors.green : Colors.grey,
-                            ),
+                      // View Button
+                      Expanded(
+                        child: Center(
+                          child: ElevatedButton(
                             onPressed: () {
-                              if (isEditable) {
-                                // Save action
-                                if (onEdit != null) onEdit!(item);
-                                editingRowIndex.value = -1; // Reset editing
-                              } else {
-                                // Start editing
-                                editingRowIndex.value = index;
+                              if (onViewButtonPressed != null) {
+                                onViewButtonPressed!(item); // Properly invoke the callback
                               }
                             },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              backgroundColor: ColorHelper.elevatedButtonColor,
+                            ),
+                            child: CommonText(
+                              text: "View",
+                              color: Colors.white,
+                            ),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red.withOpacity(0.7)),
-                            onPressed: onDelete != null ? () => onDelete!(item) : null,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            });
 
-          }).toList(),
-        ],
-      ),
+                      // Edit/Delete Actions
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                isEditable ? Icons.check : Icons.edit,
+                                color: isEditable ? Colors.green : Colors.grey,
+                              ),
+                              onPressed: () {
+                                if (isEditable) {
+                                  // Save action
+                                  if (onEdit != null) onEdit!(item);
+                                  editingRowIndex.value = -1; // Reset editing
+                                } else {
+                                  // Start editing
+                                  editingRowIndex.value = index;
+                                }
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red.withOpacity(0.7)),
+                              onPressed: onDelete != null ? () => onDelete!(item) : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+
+            }).toList(),
+          ],
+        ),
+
     );
   }
 }

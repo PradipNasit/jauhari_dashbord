@@ -16,6 +16,7 @@ Widget faqWidget(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             Row(
               children: [
                 const Text("Help Topic Table",
@@ -41,13 +42,13 @@ Widget faqWidget(
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 25),
             const Divider(),
             const SizedBox(height: 10),
             Row(
               children: [
                 const SizedBox(width: 10),
-                const Text("Search: "),
+                const Text("Search : "),
                 SizedBox(
                   width: 200,
                   child: TextField(
@@ -88,7 +89,7 @@ Widget faqWidget(
                         ),
                         CommonTextField(
                           hintText: "",
-                          controller: controller.questionController,
+                          controller: controller.addNewQuestionController,
                         ),
                         const SizedBox(
                           height: 16,
@@ -104,7 +105,7 @@ Widget faqWidget(
                         ),
                         CommonTextField(
                           hintText: "",
-                          controller: controller.answerController,
+                          controller: controller.addNewAnswerController,
                         ),
                         const SizedBox(
                           height: 16,
@@ -136,26 +137,79 @@ Widget faqWidget(
         
         
             const SizedBox(height: 20),
-          Wrap(
-              alignment: WrapAlignment.start,
-              spacing: 16, // Horizontal spacing between containers
-              runSpacing: 16,
-            children: List.generate(controller.filteredList.length, (index) {
-            return Container(
-              width: Get.width / 3,
-              padding:const  EdgeInsets.all(16),
-              decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(12)),
+        Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 16, // Horizontal spacing between containers
+          runSpacing: 16, // Vertical spacing between containers
+          children: List.generate(controller.filteredList.length, (index) {
+            bool isEditing = controller.editableIndex.value == index;
+
+            return Obx(() => Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isEditing ? Colors.yellow[100] : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isEditing ? Colors.blue : Colors.transparent,
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CommonText(text: controller.filteredList[index].question,fontSize: 16,fontWeight: FontWeight.w600,maxLines: 5,),
-                  SizedBox(height: 6,),
-                  CommonText(text: controller.filteredList[index].answer,fontSize: 16,maxLines: 6,),
+                  isEditing
+                      ? TextField(
+                    controller: controller.questionControllers[index],
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    maxLines: 5,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                  )
+                      : CommonText(
+                    text: controller.filteredList[index].question,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    maxLines: 5,
+                  ),
+                  const SizedBox(height: 6),
+                  isEditing
+                      ? TextField(
+                    controller: controller.answerControllers[index],
+                    style: const TextStyle(fontSize: 16),
+                    maxLines: 6,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                  )
+                      : CommonText(
+                    text: controller.filteredList[index].answer,
+                    fontSize: 16,
+                    maxLines: 6,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (isEditing) {
+                            // Save the changes
+                            controller.saveChanges(index);
+                          } else {
+                            // Enter edit mode
+                            controller.enterEditMode(index);
+                          }
+                        },
+                        icon: Icon(isEditing ? Icons.check : Icons.edit),
+                      ),
+
+                    ],
+                  ),
                 ],
               ),
-        
-            );
-          },),)
+            ));
+          }),
+        )
           ],
         ),
       ),

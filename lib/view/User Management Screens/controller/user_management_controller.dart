@@ -19,10 +19,9 @@ class UserManagementController extends GetxController {
   final box = GetStorage();
   RxBool isUserSipDetailsLoading = false.obs;
 
-
   final otpController = TextEditingController();
 
-  final userSearchController = TextEditingController();
+  TextEditingController userSearchController = TextEditingController();
 
   final fullNameCtr = TextEditingController();
   final aadharCardCtr = TextEditingController();
@@ -33,10 +32,13 @@ class UserManagementController extends GetxController {
 
   var editingRowIndex = (-1).obs;
 
-  List<GetUserDataModel>? userData;
+  RxList<GetUserDataModel> userData = <GetUserDataModel>[].obs;
 
-  List<UserDetails> useDetails = [];
+
+
+  List<UserDetails> useDetails = <UserDetails>[];
   List<UserDetails> tempValue = [];
+
 
   RxBool userDataLoading = false.obs;
 
@@ -45,17 +47,18 @@ class UserManagementController extends GetxController {
       userDataLoading.value = true;
       useDetails = tempValue;
       userDataLoading.value = false;
-      update();
     } else {
       userDataLoading.value = true;
       List<UserDetails> tempUserData = useDetails!.where((product) {
         return product.fullName.toLowerCase().contains(query.toLowerCase());
       }).toList();
+
       useDetails = tempUserData;
       userDataLoading.value = false;
       update();
     }
   }
+
 
   EditUserRequest editReqData(String id) {
     return EditUserRequest(
@@ -87,28 +90,28 @@ class UserManagementController extends GetxController {
     );
     userDataLoading.value = false;
     if (response?.statusCode == 200) {
-      useDetails.clear();
-      tempValue.clear();
-
-      userData = getUserDataNoidelFromJson(response!.body);
+      userData.value = getUserDataNoidelFromJson(response!.body);
       log(name: "userData", userData.toString());
 
       for (var i = 0; i < userData!.length; i++) {
         useDetails.add(UserDetails(
-            id: userData![i].id,
+            id: userData![i].id ?? "",
             createdAt: userData![i].createdAt,
             nomineeNumber: "",
             updatedAt: userData![i].updatedAt,
-            fullName: userData![i].fullName,
+            fullName: userData![i].fullName ?? "",
             mobileNumber: userData![i].mobileNumber.toString(),
-            email: userData![i].email,
+            email: userData![i].email ?? "",
             aadharCard: userData![i].aadharCard.toString(),
-            panCard: userData![i].panCard,
-            nomineeName: userData![i].nomineeName,
-            role: userData![i].role,
-            sipStatus: userData![i].sipStatus));
+            panCard: userData![i].panCard ?? "",
+            nomineeName: userData![i].nomineeName ?? "",
+            role: userData![i].role ?? "",
+            sipStatus: userData![i].sipStatus ?? ""));
       }
+
       tempValue = useDetails;
+
+      log(name: "Temp Value", tempValue.length.toString());
     }
   }
 
@@ -117,14 +120,49 @@ class UserManagementController extends GetxController {
     final reqData = editReqData(id);
 
     final response = await CommonApiService.request(
-        url: Api.baseUrl + Api.editUserData,
-        requestType: RequestType.PATCH,
-        headers: {"Authorization": "Bearer $token"},
-        body: reqData.tojson());
-    log(name: "editUserdata", response!.body.toString());
-    getUserData();
+      url: Api.baseUrl + Api.editUserData,
+      requestType: RequestType.PATCH,
+      headers: {"Authorization": "Bearer $token"},
+      body: reqData.tojson(),
+    );
 
-    if (response?.statusCode == 200) {}
+    log(name: "editUserData", response!.body.toString());
+
+    if (response?.statusCode == 200) {
+      // Parse the response to extract the updated user data
+      final updatedUserJson = jsonDecode(response.body)['user'];
+      final updatedUser = GetUserDataModel.fromJson(updatedUserJson);
+
+      // Find the user in the filtered list (useDetails) first
+      int userIndex = useDetails.indexWhere((user) => user.id == updatedUser.id);
+      if (userIndex != -1) {
+        // Update the user in the filtered list
+        useDetails[userIndex] = UserDetails(
+          id: updatedUser.id ?? "",
+          createdAt: updatedUser.createdAt,
+          nomineeNumber: updatedUser.nomineeNumber?.toString() ?? "",
+          updatedAt: updatedUser.updatedAt,
+          fullName: updatedUser.fullName ?? "",
+          mobileNumber: updatedUser.mobileNumber.toString(),
+          email: updatedUser.email ?? "",
+          aadharCard: updatedUser.aadharCard.toString(),
+          panCard: updatedUser.panCard ?? "",
+          nomineeName: updatedUser.nomineeName ?? "",
+          role: updatedUser.role ?? "",
+          sipStatus: updatedUser.sipStatus ?? "",
+        );
+
+      } else {
+        log("User with ID ${updatedUser.id} not found in the filtered list.");
+      }
+
+      update();
+      log(name: "editUserData", "User updated successfully.");
+    } else {
+      log(
+          name: "editUserData",
+          "Failed to update user. Response: ${response?.body}");
+    }
   }
 
   Future<void> editSipStatusData(String id, String status) async {
@@ -155,9 +193,6 @@ class UserManagementController extends GetxController {
 
   UserSIpData? sipData;
 
-
-
-
   Future<void> getUserSipDetails(String id) async {
     isUserSipDetailsLoading.value = true;
     String token = box.read("token");
@@ -171,8 +206,6 @@ class UserManagementController extends GetxController {
     if (response!.statusCode == 200) {
       sipData = UserSIpData.fromJson(jsonDecode(response.body));
       log(name: "Sip Data", sipData!.user?.fullName ?? "");
-
-
     }
   }
 

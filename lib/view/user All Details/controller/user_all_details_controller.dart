@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,6 +15,10 @@ class UserAllDetailsController extends GetxController {
   RxBool isOTPPopUpShow = false.obs;
 
   final userDetailsController = Get.put(UserManagementController());
+
+
+  final amountController = TextEditingController();
+  final noteController = TextEditingController();
 
   List<Map<String, dynamic>> get userDetailsValue {
     return [
@@ -68,6 +73,7 @@ class UserAllDetailsController extends GetxController {
     {"title": "Gold Withdrawal History", "totalValue": "UserName"},
     {"title": "User History", "totalValue": "user12458"},
     {"title": "Withdraw Gold", "totalValue": "9536 254 235"},
+    {"title": "Add Gold Manually", "totalValue": "9536 254 235"},
   ];
 
   final box = GetStorage();
@@ -81,6 +87,38 @@ class UserAllDetailsController extends GetxController {
       url: Api.baseUrl + Api.withDrawSip,
       requestType: RequestType.POST,
       body: {"sipId": userDetailsController.sipData?.user?.sipId ?? ""},
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    isWithDrawLoading.value = false;
+
+    if (response != null && response.statusCode == 200) {
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
+      // privacyPolicyController.clear();
+    } else {
+      print('Failed to send data: ${response?.statusCode}');
+    }
+  }
+
+  Future<void> addGoldManually() async {
+    isWithDrawLoading.value = true;
+    String token = box.read("token");
+
+    log(name: "This is sip Id , " , userDetailsController.sipData!.user!.sipId.toString() );
+
+    final response = await CommonApiService.request(
+      url: Api.baseUrl + Api.addGoldManually,
+      requestType: RequestType.POST,
+      body: {
+        "sipId": userDetailsController.sipData?.user?.sipId ?? "",
+        "amount": amountController.text.toString(),
+        "adminNote": noteController.text.toString()
+      },
       headers: {"Authorization": "Bearer $token"},
     );
 
