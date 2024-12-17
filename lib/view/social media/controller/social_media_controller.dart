@@ -62,31 +62,6 @@ class SocialMediaController extends GetxController {
     answerControllers.removeAt(index);
   }
 
-  RxList<Map<String, dynamic>> faqList = <Map<String, dynamic>>[
-    {
-      "slNo": 1,
-      "question": "What is Flutter?",
-      "answer": "A UI toolkit.",
-      "ranking": 1,
-      "status": "Active"
-    },
-    {
-      "slNo": 2,
-      "question": "What is Dart?",
-      "answer": "Programming language.",
-      "ranking": 2,
-      "status": "Active"
-    },
-    {
-      "slNo": 3,
-      "question":
-          "How to use GetXdskjnkjdsnfkjnkjfnkjfkjfnksnfkjnfkdsnfkksdnfnsdfndsnfknsdjkfnsdkjfd?",
-      "answer": "State management.",
-      "ranking": 3,
-      "status": "Inactive"
-    },
-  ].obs;
-
   RxList<GetFaqModel> filteredList = <GetFaqModel>[].obs;
 
   // Search FAQ
@@ -110,21 +85,7 @@ class SocialMediaController extends GetxController {
             .toString());
   }
 
-  // Delete FAQ
-  void deleteFAQ(int index) {
-    faqList.removeAt(index);
-    searchFAQ(''); // Refresh the filtered list
-  }
 
-  // Edit FAQ (For simplicity, replace with updated data)
-  void editFAQ(int index, String newQuestion, String newAnswer) {
-    faqList[index] = {
-      ...faqList[index],
-      "question": newQuestion,
-      "answer": newAnswer,
-    };
-    searchFAQ(''); // Refresh the filtered list
-  }
 
   RxBool isSignInLoading = false.obs;
   RxBool isCancellationPolicyLoading = false.obs;
@@ -342,6 +303,8 @@ class SocialMediaController extends GetxController {
   Future<void> getFaq() async {
     isGetFaq.value = true;
     filteredList.clear();
+    questionControllers.clear();
+    answerControllers.clear();
     filteredListForEdit.clear();
     String token = box.read("token");
 

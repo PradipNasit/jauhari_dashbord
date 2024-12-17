@@ -16,12 +16,21 @@ class UserAllDetailsController extends GetxController {
 
   final userDetailsController = Get.put(UserManagementController());
 
-
   final amountController = TextEditingController();
   final noteController = TextEditingController();
 
-  List<Map<String, dynamic>> get userDetailsValue {
-    return [
+  final otpController = TextEditingController();
+
+  RxString totalGoldUpdated = "".obs;
+  RxString? newValue = "".obs;
+
+  RxList<Map<String, dynamic>> get userDetailsValue {
+    totalGoldUpdated.value = (newValue?.value == ""
+        ? userDetailsController.sipData?.user?.totalGramsAccumulated!
+                .toStringAsFixed(2) ??
+            ""
+        : double.parse(newValue?.value ?? "").toStringAsFixed(2));
+    return RxList([
       {
         "title": "User Name",
         "icon": Icons.drive_file_rename_outline,
@@ -50,9 +59,7 @@ class UserAllDetailsController extends GetxController {
       {
         "title": "Current Balance",
         "icon": Icons.wallet,
-        "totalValue": userDetailsController.sipData?.user?.totalGramsAccumulated
-                ?.toStringAsFixed(2) ??
-            ""
+        "totalValue": totalGoldUpdated.value
       },
       {
         "title": "Date of Registration",
@@ -66,15 +73,17 @@ class UserAllDetailsController extends GetxController {
         "totalValue":
             userDetailsController.sipData?.user?.panCard.toString() ?? ""
       },
-    ];
+    ]);
   }
 
   List<Map<String, dynamic>> options = [
     {"title": "Gold Withdrawal History", "totalValue": "UserName"},
-    {"title": "User History", "totalValue": "user12458"},
+    {"title": "User Transaction History", "totalValue": "user12458"},
     {"title": "Withdraw Gold", "totalValue": "9536 254 235"},
     {"title": "Add Gold Manually", "totalValue": "9536 254 235"},
   ];
+
+  double newGoldValue = 0.0;
 
   final box = GetStorage();
   RxBool isWithDrawLoading = false.obs;
@@ -105,19 +114,16 @@ class UserAllDetailsController extends GetxController {
     }
   }
 
-  Future<void> addGoldManually() async {
+  Future<void> goldWithDrawOtpVerification() async {
     isWithDrawLoading.value = true;
     String token = box.read("token");
 
-    log(name: "This is sip Id , " , userDetailsController.sipData!.user!.sipId.toString() );
-
     final response = await CommonApiService.request(
-      url: Api.baseUrl + Api.addGoldManually,
+      url: Api.baseUrl + Api.verifyWithDrawSip,
       requestType: RequestType.POST,
       body: {
-        "sipId": userDetailsController.sipData?.user?.sipId ?? "",
-        "amount": amountController.text.toString(),
-        "adminNote": noteController.text.toString()
+        "otp": otpController.text.toString(),
+        "sipId": userDetailsController.sipData?.user?.sipId ?? ""
       },
       headers: {"Authorization": "Bearer $token"},
     );
@@ -131,6 +137,61 @@ class UserAllDetailsController extends GetxController {
         gravity: ToastGravity.SNACKBAR,
         fontSize: 14.0,
       );
+      // privacyPolicyController.clear();
+    } else {
+      print('Failed to send data: ${response?.statusCode}');
+    }
+  }
+
+  Future<void> addGoldManually(String userId) async {
+    isWithDrawLoading.value = true;
+    String token = box.read("token");
+
+    log(
+        name: "This is sip Id , ",
+        userDetailsController.sipData!.user!.sipId.toString());
+
+    final response = await CommonApiService.request(
+      url: Api.baseUrl + Api.addGoldManually,
+      requestType: RequestType.POST,
+      body: {
+        "userId": userId,
+        "sipId": userDetailsController.sipData?.user?.sipId ?? "",
+        "monthlyAmount": amountController.text.toString(),
+        "karatage": "22kt",
+        "adminNote": noteController.text.toString(),
+        "startDate": "2024/12/1"
+      },
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    isWithDrawLoading.value = false;
+
+    if (response != null && response.statusCode == 201 ||
+        response?.statusCode == 200) {
+      final data = jsonDecode(response!.body);
+      newValue?.value = data['userSIP']['totalGramsAccumulated'].toString();
+      userDetailsValue();
+
+      //  userDetailsValue(newValue: data['userSIP']['totalGramsAccumulated'].toString()).refresh();
+
+      update();
+
+      // if (transactions.isNotEmpty) {
+      //   final lastTransaction = transactions.last;
+      //   final amount = lastTransaction['amount'];
+      //   final gramsAccumulated = lastTransaction['gramsAccumulated'];
+      // }
+
+      // newGoldValue =  userDetailsController.sipData?.user?.totalGramsAccu
+      Fluttertoast.showToast(
+        msg: jsonDecode(response.body)["message"].toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        fontSize: 14.0,
+      );
+      amountController.clear();
+      noteController.clear();
       // privacyPolicyController.clear();
     } else {
       print('Failed to send data: ${response?.statusCode}');

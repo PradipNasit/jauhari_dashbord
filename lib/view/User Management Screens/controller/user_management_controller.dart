@@ -34,11 +34,8 @@ class UserManagementController extends GetxController {
 
   RxList<GetUserDataModel> userData = <GetUserDataModel>[].obs;
 
-
-
   List<UserDetails> useDetails = <UserDetails>[];
   List<UserDetails> tempValue = [];
-
 
   RxBool userDataLoading = false.obs;
 
@@ -50,7 +47,10 @@ class UserManagementController extends GetxController {
     } else {
       userDataLoading.value = true;
       List<UserDetails> tempUserData = useDetails!.where((product) {
-        return product.fullName.toLowerCase().contains(query.toLowerCase());
+        return product.fullName.toLowerCase().contains(query.toLowerCase()) ||
+            product.mobileNumber.toLowerCase().contains(query.toLowerCase()) ||
+            product.panCard.toLowerCase().contains(query.toLowerCase()) ||
+            product.email.toLowerCase().contains(query.toLowerCase());
       }).toList();
 
       useDetails = tempUserData;
@@ -58,7 +58,6 @@ class UserManagementController extends GetxController {
       update();
     }
   }
-
 
   EditUserRequest editReqData(String id) {
     return EditUserRequest(
@@ -134,7 +133,8 @@ class UserManagementController extends GetxController {
       final updatedUser = GetUserDataModel.fromJson(updatedUserJson);
 
       // Find the user in the filtered list (useDetails) first
-      int userIndex = useDetails.indexWhere((user) => user.id == updatedUser.id);
+      int userIndex =
+          useDetails.indexWhere((user) => user.id == updatedUser.id);
       if (userIndex != -1) {
         // Update the user in the filtered list
         useDetails[userIndex] = UserDetails(
@@ -151,7 +151,6 @@ class UserManagementController extends GetxController {
           role: updatedUser.role ?? "",
           sipStatus: updatedUser.sipStatus ?? "",
         );
-
       } else {
         log("User with ID ${updatedUser.id} not found in the filtered list.");
       }

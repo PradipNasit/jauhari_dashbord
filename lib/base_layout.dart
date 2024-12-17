@@ -11,6 +11,7 @@ import 'package:jauhari_dashbord/view/user%20All%20Details/view/user_all_details
 
 import 'view/Business set up/business_set_up_screen.dart';
 import 'view/banner set up/banner_set_up_screen.dart';
+import 'view/reset Transaction/recent_transaction_screen.dart';
 import 'view/social media/social_media_screen.dart';
 
 class BaseLayout extends StatefulWidget {
@@ -127,6 +128,9 @@ class _BaseLayoutState extends State<BaseLayout> {
                   case '/bannerSetup':
                     builder = (_) => BannerSetUpScreen();
                     break;
+                  case '/recentTransactions':
+                    builder = (_) => RecentTransaction();
+                    break;
                   case '/notifications':
                     builder = (_) => NotificationScreen();
                     break;
@@ -147,7 +151,7 @@ class _BaseLayoutState extends State<BaseLayout> {
                       builder(context),
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(1.0, 0.0); // Slide in from the right
+                    const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;
                     const curve = Curves.easeInOut;
 

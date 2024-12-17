@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jauhari_dashbord/Login/log_in_screen.dart';
 import 'package:jauhari_dashbord/base_layout.dart';
-import 'package:jauhari_dashbord/view/HomeScreen/page/home_page.dart';
 
 
 void main() async {
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'Jauhari Dashbord',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

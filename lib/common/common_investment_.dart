@@ -72,7 +72,7 @@ class DynamicTable<T> extends StatelessWidget {
                   const Expanded(
                     child: Center(
                       child: Text(
-                        'Edit/Delete',
+                        'Edit / Delete',
                         style: TextStyle(color: ColorHelper.switchTextColor),
                       ),
                     ),
@@ -152,7 +152,7 @@ class DynamicTable<T> extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              backgroundColor: ColorHelper.elevatedButtonColor,
+                              backgroundColor: ColorHelper.brownColor,
                             ),
                             child: CommonText(
                               text: "View",

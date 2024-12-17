@@ -14,7 +14,6 @@ class GetDashBordDataModel {
   int completedSiPs;
   TotalPayments totalPayments;
   double totalGoldAccumulated;
-  DateTime asOf;
 
   GetDashBordDataModel({
     required this.totalUsers,
@@ -22,7 +21,6 @@ class GetDashBordDataModel {
     required this.completedSiPs,
     required this.totalPayments,
     required this.totalGoldAccumulated,
-    required this.asOf,
   });
 
   factory GetDashBordDataModel.fromJson(Map<String, dynamic> json) => GetDashBordDataModel(
@@ -31,7 +29,6 @@ class GetDashBordDataModel {
     completedSiPs: json["completedSIPs"],
     totalPayments: TotalPayments.fromJson(json["totalPayments"]),
     totalGoldAccumulated: json["totalGoldAccumulated"]?.toDouble(),
-    asOf: DateTime.parse(json["asOf"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -40,7 +37,6 @@ class GetDashBordDataModel {
     "completedSIPs": completedSiPs,
     "totalPayments": totalPayments.toJson(),
     "totalGoldAccumulated": totalGoldAccumulated,
-    "asOf": asOf.toIso8601String(),
   };
 }
 

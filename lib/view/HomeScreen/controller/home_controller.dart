@@ -120,9 +120,7 @@ class HomeScreenController extends GetxController {
     if (response?.statusCode == 200) {
       dashBordModel = GetDashBordDataModel.fromJson(jsonDecode(response!.body));
 
-      log(name: "DashBordData", dashBordModel.toString());
 
-      log(name: "HomeOptions", homeOptions.toString());
     }
   }
 
@@ -142,10 +140,5 @@ class HomeScreenController extends GetxController {
     if (response?.statusCode == 200) {}
   }
 
-  @override
-  void onInit() {
-    getDashBordData();
-    // TODO: implement onInit
-    super.onInit();
-  }
+
 }

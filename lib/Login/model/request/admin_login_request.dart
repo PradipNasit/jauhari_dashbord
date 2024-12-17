@@ -1,18 +1,18 @@
 class AdminLogInRequest {
 
-  final String email;
-  final String password;
+  final String mobileNumber;
+
 
   AdminLogInRequest ({
-    required this.email,
-    required this.password
+    required this.mobileNumber,
+
 });
 
 
   Map<String, dynamic> toJson() {
     return {
-      "email" : email,
-      "password" : password
+      "mobileNumber" : mobileNumber,
+
     };
   }
 

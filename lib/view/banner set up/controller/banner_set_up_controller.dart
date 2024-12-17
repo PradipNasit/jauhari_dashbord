@@ -1,9 +1,11 @@
 import 'dart:developer';
-import 'dart:io';import 'dart:html';
+
 import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:jauhari_dashbord/apis/univarsal_apis.dart';
+import 'package:universal_html/html.dart';
 
 class BannerSetUpController extends GetxController {
   RxList<Map<String, dynamic>> banners = <Map<String, dynamic>>[].obs;
@@ -53,63 +55,85 @@ class BannerSetUpController extends GetxController {
   }
 
   // Pick a file
+  // void pickFile() {
+  //   final uploadInput = FileUploadInputElement();
+  //   uploadInput.accept = 'image/*'; // Only allow images
+  //   uploadInput.click();
+  //   uploadInput.onChange.listen((event) {
+  //     final file = uploadInput.files!.first;
+  //     final reader = FileReader();
+  //     reader.readAsArrayBuffer(file);
+  //     reader.onLoadEnd.listen((event) {
+  //       selectedFile.value = reader.result as Uint8List;
+  //       fileName.value = file.name;
+  //       log(name: "Selected File", file.name);
+  //
+  //       update();
+  //     });
+  //   });
+  //
+  //   update();
+  // }
   void pickFile() {
     final uploadInput = FileUploadInputElement();
     uploadInput.accept = 'image/*'; // Only allow images
     uploadInput.click();
+
     uploadInput.onChange.listen((event) {
       final file = uploadInput.files!.first;
       final reader = FileReader();
+
       reader.readAsArrayBuffer(file);
       reader.onLoadEnd.listen((event) {
-        selectedFile.value = reader.result as Uint8List;
-        fileName.value = file.name;
-        log(name: "Selected File", file.name);
+        if (reader.result != null) {
+          selectedFile.value = reader.result as Uint8List;
+          fileName.value = file.name;
 
-        update();
+          // Upload the file
+          uploadFile(selectedFile.value!, file.name);
+        }
       });
     });
-
-    update();
   }
   final box = GetStorage();
 
   Future<void> uploadFile(Uint8List fileBytes, String fileName) async {
     try {
-      // Define the URL of your API
-      final uri = Uri.parse("http://46.202.163.138:5000/api/upload/banners");
+      var headers = {
+        'Authorization': 'Bearer ${box.read("token")}',
+      };
 
-      // Create a multipart request
-      final request = http.MultipartRequest('POST', uri);
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Api.baseUrl}/upload/banners'),
+      );
 
-      // Add text fields
-      request.fields['bannerType'] = 'main';
+      // Add form fields
+      request.fields['bannerType'] = "main";
 
-      // Add the file as a multipart file
+      // Add the file as bytes
       request.files.add(
         http.MultipartFile.fromBytes(
-          'banners', // Field name in the API
+          'files',
           fileBytes,
           filename: fileName,
         ),
       );
 
-      // Add headers if needed
-      request.headers['Authorization'] = 'Bearer ${box.read("token")}';
+      request.headers.addAll(headers);
 
-      // Send the request
-      final response = await request.send();
+      http.StreamedResponse response = await request.send();
 
-      // Handle the response
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print("File uploaded successfully!");
+      if (response.statusCode == 200) {
+        print(await response.stream.bytesToString());
       } else {
-        print("Failed to upload file: ${response.reasonPhrase}");
+        print(response.reasonPhrase);
       }
     } catch (e) {
       print("Error uploading file: $e");
     }
   }
+
 
 
 }

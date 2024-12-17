@@ -1,8 +1,9 @@
 class Api {
 
   Api ._();
-  static    const baseUrl = "https://jauhari-backend.vercel.app/api";
+  static    const baseUrl = "http://46.202.163.138:5000/api";
   static  const logIn = "/admin-login";
+  static  const verifyOtp = "/admin/verify/otp";
   static  const getDashBordData = "/get/sip/analytics";
   static  const getUserData = "/get/users";
   static  const editUserData = "/edit/user/by/admin";
@@ -18,6 +19,7 @@ class Api {
   static  const returnAndRefund = "/create/return-and-refund-policy";
   static  const getUserParticularDetails = "/get/user/sip/details";
   static  const withDrawSip = "/withdraw/sip";
+  static  const verifyWithDrawSip = "/verify/withdraw";
   static  const createFaq = "/create/faq";
   static  const getFaq = "/get/all/faq";
   static  const editFaq = "/update/faq";

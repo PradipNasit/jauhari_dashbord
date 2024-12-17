@@ -24,29 +24,8 @@ class BannerSetUpScreen extends StatelessWidget {
               height: Get.height * 0.025,
               width: Get.width * 0.025,
             ),
-            Row(
-              children: [
-                SizedBox(width: Get.width * 0.015),
-                Flexible(
-                  child: CommonTextField(
-                    hintText: "Search",
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  height: 50,
-                  width: 50,
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: ColorHelper.brownColor,
-                  ),
-                ),
-                CommonText(text: "Your name"),
-                SizedBox(width: Get.width * 0.01),
-              ],
-            ),
-            SizedBox(height: Get.height * 0.06),
+
+            SizedBox(height: Get.height * 0.02),
             pickBannerWidget(controller: bannerSetUpController)
           ],
         ),

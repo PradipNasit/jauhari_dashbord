@@ -22,7 +22,7 @@ class LogInScreen extends StatelessWidget {
         children: [
           Center(
             child: SizedBox(
-              height: 350,
+              height: 450,
               width: 450,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,11 +31,11 @@ class LogInScreen extends StatelessWidget {
                   const SizedBox(
                     height: 30,
                   ),
-                  CommonTextField(hintText: "Enter email"),
+                  CommonTextField(hintText: "Enter mobile number", controller: logInController.emailCtr,maxCount: 10,keyboardType: TextInputType.number,),
                   const SizedBox(
                     height: 30,
                   ),
-                  CommonTextField(hintText: "Enter password"),
+                  CommonTextField(hintText: "Enter OTP",controller: logInController.passwordCtr,),
                   const SizedBox(
                     height: 30,
                   ),
@@ -45,10 +45,8 @@ class LogInScreen extends StatelessWidget {
                           String token =
                               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTZkODVmZWVmOTFlYmViYzA5M2IyYyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczMzgwMjY3Nn0.S0CvlPfr7qiKCE_-2S5QCVFCBJTzvLQnQhs5JV1sVbQ";
                           logInController.box.write("token", token);
-                          Get.to(() => BaseLayout(
-                                navigatorKey: GlobalKey<NavigatorState>(),
-                              ));
-                          //logInController.signIn();
+
+                          logInController.verifyOtp();
                         },
                         child: logInController.isSignInLoading.value
                             ? const CupertinoActivityIndicator()
