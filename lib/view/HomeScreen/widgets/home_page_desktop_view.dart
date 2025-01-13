@@ -74,11 +74,13 @@ class HomePageDesktopView extends StatelessWidget {
                                             horizontal: 20),
                                         height: 85,
                                         width: 300,
+                                        alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius:
                                                 BorderRadius.circular(12)),
                                         child: Row(
+
                                           children: [
                                              Icon(
                                               controller.homeOptions[index]
@@ -87,12 +89,13 @@ class HomePageDesktopView extends StatelessWidget {
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            Expanded(
+                                            SizedBox(
+                                              width: 100,
                                                 child: CommonText(
                                               text: controller.homeOptions[index]
                                                   ['title'],
                                               fontSize: 16,
-                                              maxLines: 1,
+                                              maxLines: 2,
                                             )),
                                             const Spacer(),
                                             CommonText(

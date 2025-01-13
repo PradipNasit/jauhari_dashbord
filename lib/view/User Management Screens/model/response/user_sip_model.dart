@@ -9,87 +9,207 @@ UserSIpData userSIpDataFromJson(String str) => UserSIpData.fromJson(json.decode(
 String userSIpDataToJson(UserSIpData data) => json.encode(data.toJson());
 
 class UserSIpData {
-  User? user;
+  UserWithActiveSip userWithActiveSip;
+  List<SipDetail> sipDetails;
 
   UserSIpData({
-    this.user,
+    required this.userWithActiveSip,
+    required this.sipDetails,
   });
 
   factory UserSIpData.fromJson(Map<String, dynamic> json) => UserSIpData(
-    user: json["user"] != null ? User.fromJson(json["user"]) : null,
+    userWithActiveSip: UserWithActiveSip.fromJson(json["userWithActiveSIP"]),
+    sipDetails: List<SipDetail>.from(json["sipDetails"]?.map((x) => SipDetail.fromJson(x)) ?? []),
   );
 
   Map<String, dynamic> toJson() => {
-    "user": user?.toJson(),
+    "userWithActiveSIP": userWithActiveSip.toJson(),
+    "sipDetails": sipDetails.map((x) => x.toJson()).toList(),
   };
 }
 
-class User {
+class SipDetail {
+  String? id;
+  String? userId;
+  double? monthlyAmount;
+  DateTime? startDate;
+  DateTime? nextDueDate;
+  String? karatage;
+  int? totalMonths;
+  int? completedMonths;
+  String? status;
+  double? totalGramsAccumulated;
+  List<Transaction>? transactions;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
+  double? totalInvestment;
+
+  SipDetail({
+    this.id,
+    this.userId,
+    this.monthlyAmount,
+    this.startDate,
+    this.nextDueDate,
+    this.karatage,
+    this.totalMonths,
+    this.completedMonths,
+    this.status,
+    this.totalGramsAccumulated,
+    this.transactions,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.totalInvestment,
+  });
+
+  factory SipDetail.fromJson(Map<String, dynamic> json) => SipDetail(
+    id: json["_id"],
+    userId: json["userId"],
+    monthlyAmount: json["monthlyAmount"]?.toDouble(),
+    startDate: json["startDate"] != null ? DateTime.parse(json["startDate"]) : null,
+    nextDueDate: json["nextDueDate"] != null ? DateTime.parse(json["nextDueDate"]) : null,
+    karatage: json["karatage"],
+    totalMonths: json["totalMonths"],
+    completedMonths: json["completedMonths"],
+    status: json["status"],
+    totalGramsAccumulated: json["totalGramsAccumulated"]?.toDouble(),
+    transactions: json["transactions"] != null
+        ? List<Transaction>.from(json["transactions"].map((x) => Transaction.fromJson(x)))
+        : null,
+    createdAt: json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
+    updatedAt: json["updatedAt"] != null ? DateTime.parse(json["updatedAt"]) : null,
+    v: json["__v"],
+    totalInvestment: json["totalInvestment"]?.toDouble(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "userId": userId,
+    "monthlyAmount": monthlyAmount,
+    "startDate": startDate?.toIso8601String(),
+    "nextDueDate": nextDueDate?.toIso8601String(),
+    "karatage": karatage,
+    "totalMonths": totalMonths,
+    "completedMonths": completedMonths,
+    "status": status,
+    "totalGramsAccumulated": totalGramsAccumulated,
+    "transactions": transactions?.map((x) => x.toJson()).toList(),
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
+    "__v": v,
+    "totalInvestment": totalInvestment,
+  };
+}
+
+class Transaction {
+  DateTime? date;
+  double? amount;
+  int? goldRate;
+  double? gramsAccumulated;
+  double? gstAmount;
+  String? transactionType;
+  String? adminNote;
+  String? id;
+
+  Transaction({
+    this.date,
+    this.amount,
+    this.goldRate,
+    this.gramsAccumulated,
+    this.gstAmount,
+    this.transactionType,
+    this.adminNote,
+    this.id,
+  });
+
+  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
+    date: json["date"] != null ? DateTime.parse(json["date"]) : null,
+    amount: json["amount"]?.toDouble(),
+    goldRate: json["goldRate"],
+    gramsAccumulated: json["gramsAccumulated"]?.toDouble(),
+    gstAmount: json["gstAmount"]?.toDouble(),
+    transactionType: json["transactionType"],
+    adminNote: json["adminNote"],
+    id: json["_id"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "date": date?.toIso8601String(),
+    "amount": amount,
+    "goldRate": goldRate,
+    "gramsAccumulated": gramsAccumulated,
+    "gstAmount": gstAmount,
+    "transactionType": transactionType,
+    "adminNote": adminNote,
+    "_id": id,
+  };
+}
+
+class UserWithActiveSip {
+  bool? mobileNumberVerified;
   String? id;
   String? fullName;
   int? mobileNumber;
   String? email;
-  String? role;
   int? aadharCard;
   String? panCard;
   String? nomineeName;
-  int? nomineeNumber;
+  String? role;
   DateTime? createdAt;
   DateTime? updatedAt;
-  int? totalInvestment;
+  int? v;
+  dynamic activeSIPTotalInvestment;
   double? totalGramsAccumulated;
-  String? sipId;
 
-  User({
+  UserWithActiveSip({
+    this.mobileNumberVerified,
     this.id,
     this.fullName,
     this.mobileNumber,
     this.email,
-    this.role,
     this.aadharCard,
     this.panCard,
     this.nomineeName,
-    this.nomineeNumber,
+    this.role,
     this.createdAt,
     this.updatedAt,
-    this.totalInvestment,
+    this.v,
+    this.activeSIPTotalInvestment,
     this.totalGramsAccumulated,
-    this.sipId,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"] as String?,
-    fullName: json["fullName"] as String?,
-    mobileNumber: json["mobileNumber"] is int ? json["mobileNumber"] as int? : null,
-    email: json["email"] as String?,
-    role: json["role"] as String?,
-    aadharCard: json["aadharCard"] is int ? json["aadharCard"] as int? : null,
-    panCard: json["panCard"] as String?,
-    nomineeName: json["nomineeName"] as String?,
-    nomineeNumber: json["nomineeNumber"] is int ? json["nomineeNumber"] as int? : null,
+  factory UserWithActiveSip.fromJson(Map<String, dynamic> json) => UserWithActiveSip(
+    mobileNumberVerified: json["mobileNumberVerified"],
+    id: json["_id"],
+    fullName: json["fullName"],
+    mobileNumber: json["mobileNumber"],
+    email: json["email"],
+    aadharCard: json["aadharCard"],
+    panCard: json["panCard"],
+    nomineeName: json["nomineeName"],
+    role: json["role"],
     createdAt: json["createdAt"] != null ? DateTime.parse(json["createdAt"]) : null,
     updatedAt: json["updatedAt"] != null ? DateTime.parse(json["updatedAt"]) : null,
-    totalInvestment: json["totalInvestment"] is int ? json["totalInvestment"] as int? : null,
-    totalGramsAccumulated: json["totalGramsAccumulated"] != null
-        ? (json["totalGramsAccumulated"] as num?)?.toDouble()
-        : null,
-    sipId: json["sipId"] as String?,
+    activeSIPTotalInvestment: json['activeSIPTotalInvestment'],
+    v: json["__v"],
+    totalGramsAccumulated: json["totalGramsAccumulated"]?.toDouble(),
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "mobileNumberVerified": mobileNumberVerified,
+    "_id": id,
     "fullName": fullName,
     "mobileNumber": mobileNumber,
     "email": email,
-    "role": role,
     "aadharCard": aadharCard,
     "panCard": panCard,
     "nomineeName": nomineeName,
-    "nomineeNumber": nomineeNumber,
+    "role": role,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
-    "totalInvestment": totalInvestment,
+    "__v": v,
     "totalGramsAccumulated": totalGramsAccumulated,
-    "sipId": sipId,
+    'activeSIPTotalInvestment': activeSIPTotalInvestment,
   };
 }

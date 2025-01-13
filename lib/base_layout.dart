@@ -40,6 +40,9 @@ class _BaseLayoutState extends State<BaseLayout> {
             color: ColorHelper.brownColor,
             child: Column(
               children: [
+                Container(
+                  height: 25,
+                ),
                 Image.asset(
                   "assets/images/logo.png",
                   width: 100,
@@ -147,16 +150,14 @@ class _BaseLayoutState extends State<BaseLayout> {
                 }
                 return PageRouteBuilder(
                   settings: settings,
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      builder(context),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
+                  transitionDuration: const Duration(milliseconds: 300), // Optimized duration
+                  reverseTransitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
                     const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;
-                    const curve = Curves.easeInOut;
-
-                    var tween =
-                    Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    const curve = Curves.ease; // Lighter curve
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
                     var offsetAnimation = animation.drive(tween);
                     return SlideTransition(
                       position: offsetAnimation,

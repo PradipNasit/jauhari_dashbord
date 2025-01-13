@@ -4,16 +4,15 @@ import 'package:get_storage/get_storage.dart';
 import 'package:jauhari_dashbord/Login/log_in_screen.dart';
 import 'package:jauhari_dashbord/base_layout.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await GetStorage.init();
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
+  MyApp({super.key});
   final box = GetStorage();
   // This widget is the root of your application.
   @override
@@ -25,9 +24,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: (box.read("token") ?? "").isEmpty || box.read("token") == null ?LogInScreen(   ) : BaseLayout(navigatorKey:  GlobalKey<NavigatorState>()),
+      home: (box.read("token") ?? "").isEmpty || box.read("token") == null
+          ? LogInScreen()
+          : BaseLayout(navigatorKey: GlobalKey<NavigatorState>()),
     );
   }
 }
-
-

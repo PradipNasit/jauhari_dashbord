@@ -8,7 +8,8 @@ class Api {
   static  const getUserData = "/get/users";
   static  const editUserData = "/edit/user/by/admin";
   static  const editSipData = "/update/sip/status/manually";
-  static  const deleteUserData = "/delete/user";
+  static  const deleteUserData = "/verify/delete/user/otp";
+  static  const deleteUserReqOtp = "/delete/user";
   static  const createSip = "/create/sip-plan";
   static  const getSipData = "/get/all/sip-plans";
   static  const createBusiness = "/create/admin/company-information";
@@ -24,4 +25,7 @@ class Api {
   static  const getFaq = "/get/all/faq";
   static  const editFaq = "/update/faq";
   static  const addGoldManually = "/add/amount/sip/amount";
+  static  const getAllBanners = "/get/all/banners";
+  static  const updateBannerStatus = "/update/banner/status";
+  static  const deleteBanner = "/delete/banner";
 }

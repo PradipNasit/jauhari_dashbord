@@ -49,11 +49,7 @@ class HomeScreenController extends GetxController {
         "totalValue": double.parse(dashBordModel?.totalPayments?.amount.toString() ?? "0.0")
             .toStringAsFixed(2),
       },
-      {
-        "title": "Missed Payments",
-        "icon": Icons.warning, // Use a valid fallback icon
-        "totalValue": "12",
-      },
+
       {
         "title": "Total Gold Accumulated",
         "icon": Icons.currency_rupee,

@@ -1,18 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jauhari_dashbord/apis/univarsal_apis.dart';
-import 'package:jauhari_dashbord/base_layout.dart';
 import 'package:jauhari_dashbord/common/common_api_service.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/request/delete_user_request.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/request/edit_sip_request.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/request/edit_user_request.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/get_user_data_model.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_details_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/model/response/user_sip_model.dart';
 
 class UserManagementController extends GetxController {
@@ -76,7 +73,7 @@ class UserManagementController extends GetxController {
   }
 
   DeleteUserRequest deleteUserReq(String id) {
-    return DeleteUserRequest(id: id);
+    return DeleteUserRequest(id: id ,otp: otpController.text.toString());
   }
 
   Future<void> getUserData() async {
@@ -94,18 +91,18 @@ class UserManagementController extends GetxController {
 
       for (var i = 0; i < userData!.length; i++) {
         useDetails.add(UserDetails(
-            id: userData![i].id ?? "",
-            createdAt: userData![i].createdAt,
+            id: userData[i].id ?? "",
+            createdAt: userData[i].createdAt,
             nomineeNumber: "",
-            updatedAt: userData![i].updatedAt,
-            fullName: userData![i].fullName ?? "",
+            updatedAt: userData[i].updatedAt,
+            fullName: userData[i].fullName ?? "",
             mobileNumber: userData![i].mobileNumber.toString(),
-            email: userData![i].email ?? "",
-            aadharCard: userData![i].aadharCard.toString(),
-            panCard: userData![i].panCard ?? "",
-            nomineeName: userData![i].nomineeName ?? "",
-            role: userData![i].role ?? "",
-            sipStatus: userData![i].sipStatus ?? ""));
+            email: userData[i].email ?? "",
+            aadharCard: userData[i].aadharCard.toString(),
+            panCard: userData[i].panCard ?? "",
+            nomineeName: userData[i].nomineeName ?? "",
+            role: userData[i].role ?? "",
+            sipStatus: userData[i].sipStatus ?? ""));
       }
 
       tempValue = useDetails;
@@ -176,7 +173,22 @@ class UserManagementController extends GetxController {
     log(name: "editSipData", response!.body.toString());
   }
 
-  Future<void> deleteUser(String id) async {
+
+
+
+  Future<void> deleteUserReqOtp(String id) async {
+    final token = box.read("token");
+
+    final response = await CommonApiService.request(
+        url: Api.baseUrl + Api.deleteUserReqOtp,
+        requestType: RequestType.POST,
+        headers: {"Authorization": "Bearer $token"},
+        body: {"userId" : id});
+
+    if (response!.statusCode == 200) {}
+  }
+
+  Future<void> deleteUserWithOtp(String id) async {
     final token = box.read("token");
     final deleteUserData = deleteUserReq(id);
 
@@ -204,13 +216,14 @@ class UserManagementController extends GetxController {
     isUserSipDetailsLoading.value = false;
     if (response!.statusCode == 200) {
       sipData = UserSIpData.fromJson(jsonDecode(response.body));
-      log(name: "Sip Data", sipData!.user?.fullName ?? "");
     }
   }
 
   @override
   void onInit() {
-    getUserData();
+
+getUserData();
+
     // TODO: implement onInit
     super.onInit();
   }

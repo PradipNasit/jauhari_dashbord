@@ -1,8 +1,13 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jauhari_dashbord/Helper/color_helper.dart';
 import 'package:jauhari_dashbord/common/common_text_widget.dart';
 import 'package:jauhari_dashbord/view/banner%20set%20up/controller/banner_set_up_controller.dart';
+
+
 
 Widget pickBannerWidget({required BannerSetUpController controller}) {
   return Flexible(
@@ -92,6 +97,7 @@ Widget pickBannerWidget({required BannerSetUpController controller}) {
                         onTap: () {
                           if (controller.selectedBannerType.value.isNotEmpty &&
                               controller.selectedFile.value != null) {
+
                             controller.uploadFile(controller.selectedFile.value!, controller.fileName.value);
                             controller.addBanner(
                               controller.selectedBannerType.value,
@@ -145,38 +151,31 @@ Widget pickBannerWidget({required BannerSetUpController controller}) {
             const SizedBox(height: 16),
            const  SizedBox(height: 10),
             Obx(() {
-              if (controller.banners.isEmpty) {
-                return const Center(
-                  child: Text(
-                    "No data available",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                );
-              }
-              return ListView.builder(
-                itemCount: controller.banners.length,
-                physics: NeverScrollableScrollPhysics(),
+              return controller.isBannerLoading.value ?const  CupertinoActivityIndicator() :ListView.builder(
+                itemCount: controller.bannerShortData.length,
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  final banner = controller.banners[index];
+                  final banner = controller.bannerShortData[index];
                   return Card(
+                    color: Colors.white,
                     child: ListTile(
-                      leading: Image.memory(banner["image"],
+                      leading: Image.network(banner.bannerUrl ??"",
                           width: 50, height: 50, fit: BoxFit.cover),
-                      title: Text(banner["type"]),
+                      title: Text(banner.bannerType.toString()),
                       subtitle: Text(
-                          "Published: ${banner["published"] ? 'Yes' : 'No'}"),
+                          "Published: ${banner.status ? 'Yes' : 'No'}"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Switch(
-                            value: banner["published"],
+                            value: banner.status,
                             onChanged: (value) =>
                                 controller.togglePublishStatus(index),
                           ),
                           IconButton(
                             onPressed: () => controller.deleteBanner(index),
-                            icon: Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.red),
                           ),
                         ],
                       ),

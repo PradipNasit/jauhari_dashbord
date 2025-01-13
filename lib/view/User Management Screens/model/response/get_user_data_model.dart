@@ -42,9 +42,9 @@ class GetUserDataModel {
   factory GetUserDataModel.fromJson(Map<String, dynamic> json) => GetUserDataModel(
     id: json["_id"],
     fullName: json["fullName"],
-    mobileNumber: json["mobileNumber"],
+    mobileNumber: json["mobileNumber"] ?? 0,
     email: json["email"],
-    aadharCard: json["aadharCard"],
+    aadharCard: json["aadharCard"] ?? 0,
     panCard: json["panCard"],
     nomineeName: json["nomineeName"],
     role: json["role"],

@@ -18,15 +18,22 @@ class UserAllDetailsController extends GetxController {
 
   final amountController = TextEditingController();
   final noteController = TextEditingController();
+  final monthController = TextEditingController();
 
   final otpController = TextEditingController();
+
+  // List of payment options
+  final List<String> paymentOptions = ['Cash', 'UPI', 'Credit Card'];
+
+  // Selected payment option
+  String? selectedOption;
 
   RxString totalGoldUpdated = "".obs;
   RxString? newValue = "".obs;
 
   RxList<Map<String, dynamic>> get userDetailsValue {
     totalGoldUpdated.value = (newValue?.value == ""
-        ? userDetailsController.sipData?.user?.totalGramsAccumulated!
+        ? userDetailsController.sipData?.userWithActiveSip?.totalGramsAccumulated!
                 .toStringAsFixed(2) ??
             ""
         : double.parse(newValue?.value ?? "").toStringAsFixed(2));
@@ -34,27 +41,27 @@ class UserAllDetailsController extends GetxController {
       {
         "title": "User Name",
         "icon": Icons.drive_file_rename_outline,
-        "totalValue": userDetailsController.sipData?.user?.fullName ?? "No Name"
+        "totalValue": userDetailsController.sipData?.userWithActiveSip?.fullName ?? "No Name"
       },
-      {"title": "User ID", "totalValue": "", "icon": Icons.perm_identity},
+
       {
         "title": "Mobile",
         "icon": Icons.phone_android,
         "totalValue":
-            userDetailsController.sipData?.user?.mobileNumber.toString() ?? ""
+            userDetailsController.sipData?.userWithActiveSip?.mobileNumber.toString() ?? ""
       },
       {
         "title": "Adhar card no.",
         "icon": Icons.credit_card_sharp,
         "totalValue":
-            userDetailsController.sipData?.user?.aadharCard.toString() ?? ""
+            userDetailsController.sipData?.userWithActiveSip?.aadharCard.toString() ?? ""
       },
       {
         "title": "Total Amount Invested",
         "icon": Icons.currency_rupee,
-        "totalValue": userDetailsController.sipData?.user?.totalInvestment
-                ?.toStringAsFixed(2) ??
-            ""
+        "totalValue":
+         double.parse(userDetailsController.sipData?.userWithActiveSip ?.activeSIPTotalInvestment!.toString() ?? "0.0").toStringAsFixed(2) ??
+             ""
       },
       {
         "title": "Current Balance",
@@ -64,14 +71,13 @@ class UserAllDetailsController extends GetxController {
       {
         "title": "Date of Registration",
         "icon": Icons.date_range,
-        "totalValue": DateFormat("dd/MM/yyyy").format(DateTime.parse(
-            userDetailsController.sipData?.user?.createdAt.toString() ?? ""))
+        "totalValue": DateFormat("yyyy-MM-dd").format(userDetailsController.sipData!.userWithActiveSip!.createdAt!) ?? ""
       },
       {
         "title": "Pan card no.",
         "icon": Icons.credit_card_sharp,
         "totalValue":
-            userDetailsController.sipData?.user?.panCard.toString() ?? ""
+            userDetailsController.sipData?.userWithActiveSip?.panCard.toString() ?? ""
       },
     ]);
   }
@@ -95,7 +101,7 @@ class UserAllDetailsController extends GetxController {
     final response = await CommonApiService.request(
       url: Api.baseUrl + Api.withDrawSip,
       requestType: RequestType.POST,
-      body: {"sipId": userDetailsController.sipData?.user?.sipId ?? ""},
+      body: {"sipId": userDetailsController.sipData?.userWithActiveSip?.id ?? ""},
       headers: {"Authorization": "Bearer $token"},
     );
 
@@ -123,7 +129,7 @@ class UserAllDetailsController extends GetxController {
       requestType: RequestType.POST,
       body: {
         "otp": otpController.text.toString(),
-        "sipId": userDetailsController.sipData?.user?.sipId ?? ""
+        "sipId": userDetailsController.sipData?.userWithActiveSip?.id ?? ""
       },
       headers: {"Authorization": "Bearer $token"},
     );
@@ -149,16 +155,17 @@ class UserAllDetailsController extends GetxController {
 
     log(
         name: "This is sip Id , ",
-        userDetailsController.sipData!.user!.sipId.toString());
+        userDetailsController.sipData!.userWithActiveSip!.id.toString());
 
     final response = await CommonApiService.request(
       url: Api.baseUrl + Api.addGoldManually,
       requestType: RequestType.POST,
       body: {
         "userId": userId,
-        "sipId": userDetailsController.sipData?.user?.sipId ?? "",
+        "sipId": userDetailsController.sipData?.userWithActiveSip?.id ?? "",
         "monthlyAmount": amountController.text.toString(),
         "karatage": "22kt",
+        "months":monthController.text.toString(),
         "adminNote": noteController.text.toString(),
         "startDate": "2024/12/1"
       },
