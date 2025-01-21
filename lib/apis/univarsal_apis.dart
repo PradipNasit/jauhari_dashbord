@@ -28,4 +28,5 @@ class Api {
   static  const getAllBanners = "/get/all/banners";
   static  const updateBannerStatus = "/update/banner/status";
   static  const deleteBanner = "/delete/banner";
+  static  const getUserTransactionDetails = "/get/user/sip/transactions";
 }

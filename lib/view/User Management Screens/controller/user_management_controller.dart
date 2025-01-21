@@ -47,7 +47,7 @@ class UserManagementController extends GetxController {
         return product.fullName.toLowerCase().contains(query.toLowerCase()) ||
             product.mobileNumber.toLowerCase().contains(query.toLowerCase()) ||
             product.panCard.toLowerCase().contains(query.toLowerCase()) ||
-            product.email.toLowerCase().contains(query.toLowerCase());
+            product.email.toLowerCase().contains(query.toLowerCase()) || product.id.toLowerCase().contains(query.toLowerCase());
       }).toList();
 
       useDetails = tempUserData;
@@ -215,6 +215,7 @@ class UserManagementController extends GetxController {
         body: {"userId": id.toString()});
     isUserSipDetailsLoading.value = false;
     if (response!.statusCode == 200) {
+      box.write("userId", id.toString());
       sipData = UserSIpData.fromJson(jsonDecode(response.body));
     }
   }

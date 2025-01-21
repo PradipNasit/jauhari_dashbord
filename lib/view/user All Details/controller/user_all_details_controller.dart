@@ -31,37 +31,52 @@ class UserAllDetailsController extends GetxController {
   RxString totalGoldUpdated = "".obs;
   RxString? newValue = "".obs;
 
+  RxString totalAmount = "".obs;
+  RxString? newAmount = "".obs;
+
   RxList<Map<String, dynamic>> get userDetailsValue {
     totalGoldUpdated.value = (newValue?.value == ""
-        ? userDetailsController.sipData?.userWithActiveSip?.totalGramsAccumulated!
+        ? userDetailsController
+                .sipData?.userWithActiveSip?.totalGramsAccumulated!
                 .toStringAsFixed(2) ??
             ""
         : double.parse(newValue?.value ?? "").toStringAsFixed(2));
+
+    totalAmount.value = (newAmount?.value == ""
+        ? double.parse(userDetailsController
+                    .sipData?.userWithActiveSip?.activeSIPTotalInvestment!
+                    .toString() ??
+                "0.0")
+            .toStringAsFixed(2)
+        : double.parse(newAmount?.value ?? "").toStringAsFixed(2));
     return RxList([
       {
         "title": "User Name",
         "icon": Icons.drive_file_rename_outline,
-        "totalValue": userDetailsController.sipData?.userWithActiveSip?.fullName ?? "No Name"
+        "totalValue":
+            userDetailsController.sipData?.userWithActiveSip?.fullName ??
+                "No Name"
       },
-
       {
         "title": "Mobile",
         "icon": Icons.phone_android,
-        "totalValue":
-            userDetailsController.sipData?.userWithActiveSip?.mobileNumber.toString() ?? ""
+        "totalValue": userDetailsController
+                .sipData?.userWithActiveSip?.mobileNumber
+                .toString() ??
+            ""
       },
       {
         "title": "Adhar card no.",
         "icon": Icons.credit_card_sharp,
-        "totalValue":
-            userDetailsController.sipData?.userWithActiveSip?.aadharCard.toString() ?? ""
+        "totalValue": userDetailsController
+                .sipData?.userWithActiveSip?.aadharCard
+                .toString() ??
+            ""
       },
       {
         "title": "Total Amount Invested",
         "icon": Icons.currency_rupee,
-        "totalValue":
-         double.parse(userDetailsController.sipData?.userWithActiveSip ?.activeSIPTotalInvestment!.toString() ?? "0.0").toStringAsFixed(2) ??
-             ""
+        "totalValue": totalAmount.value
       },
       {
         "title": "Current Balance",
@@ -71,13 +86,16 @@ class UserAllDetailsController extends GetxController {
       {
         "title": "Date of Registration",
         "icon": Icons.date_range,
-        "totalValue": DateFormat("yyyy-MM-dd").format(userDetailsController.sipData!.userWithActiveSip!.createdAt!) ?? ""
+        "totalValue": DateFormat("yyyy-MM-dd").format(
+                userDetailsController.sipData!.userWithActiveSip!.createdAt!) ??
+            ""
       },
       {
         "title": "Pan card no.",
         "icon": Icons.credit_card_sharp,
-        "totalValue":
-            userDetailsController.sipData?.userWithActiveSip?.panCard.toString() ?? ""
+        "totalValue": userDetailsController.sipData?.userWithActiveSip?.panCard
+                .toString() ??
+            ""
       },
     ]);
   }
@@ -101,7 +119,9 @@ class UserAllDetailsController extends GetxController {
     final response = await CommonApiService.request(
       url: Api.baseUrl + Api.withDrawSip,
       requestType: RequestType.POST,
-      body: {"sipId": userDetailsController.sipData?.userWithActiveSip?.id ?? ""},
+      body: {
+        "sipId": userDetailsController.sipData?.sipDetails.last.id ?? ""
+      },
       headers: {"Authorization": "Bearer $token"},
     );
 
@@ -114,6 +134,8 @@ class UserAllDetailsController extends GetxController {
         gravity: ToastGravity.SNACKBAR,
         fontSize: 14.0,
       );
+      totalAmount.value = "";
+      totalGoldUpdated.value = "";
       // privacyPolicyController.clear();
     } else {
       print('Failed to send data: ${response?.statusCode}');
@@ -153,9 +175,6 @@ class UserAllDetailsController extends GetxController {
     isWithDrawLoading.value = true;
     String token = box.read("token");
 
-    log(
-        name: "This is sip Id , ",
-        userDetailsController.sipData!.userWithActiveSip!.id.toString());
 
     final response = await CommonApiService.request(
       url: Api.baseUrl + Api.addGoldManually,
@@ -165,7 +184,7 @@ class UserAllDetailsController extends GetxController {
         "sipId": userDetailsController.sipData?.userWithActiveSip?.id ?? "",
         "monthlyAmount": amountController.text.toString(),
         "karatage": "22kt",
-        "months":monthController.text.toString(),
+        "months": monthController.text.toString(),
         "adminNote": noteController.text.toString(),
         "startDate": "2024/12/1"
       },
@@ -178,17 +197,13 @@ class UserAllDetailsController extends GetxController {
         response?.statusCode == 200) {
       final data = jsonDecode(response!.body);
       newValue?.value = data['userSIP']['totalGramsAccumulated'].toString();
+      newAmount?.value = data['totalAmount'].toString();
       userDetailsValue();
+      getUserTransactionDetails();
 
       //  userDetailsValue(newValue: data['userSIP']['totalGramsAccumulated'].toString()).refresh();
 
       update();
-
-      // if (transactions.isNotEmpty) {
-      //   final lastTransaction = transactions.last;
-      //   final amount = lastTransaction['amount'];
-      //   final gramsAccumulated = lastTransaction['gramsAccumulated'];
-      // }
 
       // newGoldValue =  userDetailsController.sipData?.user?.totalGramsAccu
       Fluttertoast.showToast(
@@ -203,5 +218,27 @@ class UserAllDetailsController extends GetxController {
     } else {
       print('Failed to send data: ${response?.statusCode}');
     }
+  }
+
+  Future getUserTransactionDetails() async {
+    final token = box.read("token");
+    final response = await CommonApiService.request(
+      url: "${Api.baseUrl + Api.getUserTransactionDetails}?userID=${box.read('userId')}",
+      requestType: RequestType.GET,
+      headers: {"Authorization": "Bearer $token"},
+    );
+
+    if (response?.statusCode == 200) {
+      log(name: "Transactuon Details", response!.body.toString());
+    } else {
+      log(name: "Transactuon Error", response!.body.toString());
+    }
+  }
+
+  @override
+  void onInit() {
+    getUserTransactionDetails();
+    // TODO: implement onInit
+    super.onInit();
   }
 }

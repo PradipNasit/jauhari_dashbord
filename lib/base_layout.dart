@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:jauhari_dashbord/Helper/color_helper.dart';
 import 'package:jauhari_dashbord/common/common_text_widget.dart';
+import 'package:jauhari_dashbord/paymeny_info_screen.dart';
 import 'package:jauhari_dashbord/view/HomeScreen/controller/home_controller.dart';
 import 'package:jauhari_dashbord/view/HomeScreen/page/home_page.dart';
 import 'package:jauhari_dashbord/view/User%20Management%20Screens/widgets/user_management_desktop_view.dart';
@@ -136,6 +137,10 @@ class _BaseLayoutState extends State<BaseLayout> {
                     break;
                   case '/notifications':
                     builder = (_) => NotificationScreen();
+                    break;
+
+                  case '/paymentInfo':
+                    builder = (_) => PaymentInfoScreen();
                     break;
                   case '/user-details':
                     final args = settings.arguments as Map<String, dynamic>;

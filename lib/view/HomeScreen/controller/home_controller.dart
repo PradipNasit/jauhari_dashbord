@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:jauhari_dashbord/apis/univarsal_apis.dart';
 import 'package:jauhari_dashbord/common/common_api_service.dart';
+import 'package:jauhari_dashbord/paymeny_info_screen.dart';
 import 'package:jauhari_dashbord/responsive/common_builder.dart';
 import 'package:jauhari_dashbord/view/Business%20set%20up/business_set_up_screen.dart';
 import 'package:jauhari_dashbord/view/HomeScreen/model/request/creatre_sip_request.dart';
@@ -83,7 +84,8 @@ class HomeScreenController extends GetxController {
         return ResponsiveLayout(deskTopView: BannerSetUpScreen());
       case 6:
         return ResponsiveLayout(deskTopView: NotificationScreen());
-
+      case 7:
+        return ResponsiveLayout(deskTopView: PaymentInfoScreen());
       default:
         return const Center(child: Text('No view available'));
     }
@@ -97,6 +99,7 @@ class HomeScreenController extends GetxController {
     {"title": "Pages and Media", "icon":"assets/icons/pages_media_icon.svg" , "route": "/Pages and Media"},
     {"title": "Banner Setup", "icon":"assets/icons/banner_set_icon.svg",  "route": "/bannerSetup"},
     {"title": "Notifications", "icon":"assets/icons/noti_icon.svg","route": "/notifications"},
+    {"title": "payment info", "icon":"assets/icons/noti_icon.svg","route": "/paymentInfo"},
   ];
 
   final box = GetStorage();

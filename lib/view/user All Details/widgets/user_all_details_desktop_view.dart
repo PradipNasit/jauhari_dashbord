@@ -153,11 +153,7 @@ Widget userAllDetailsDesktopView(
                                 (index) => GestureDetector(
                                   onTap: () {
                                     if (index == 2) {
-                                      if (userManagementController
-                                              .sipData
-                                              ?.userWithActiveSip
-                                              ?.totalGramsAccumulated ==
-                                          0.000) {
+                                      if ( double.parse(controller.totalGoldUpdated.value) == 0.000) {
                                         Get.snackbar("Error",
                                             "Insufficient Gold Balance",
                                             backgroundColor: Colors.red,
@@ -259,12 +255,11 @@ Widget userAllDetailsDesktopView(
                                               actions: [
                                                 ElevatedButton(
                                                   onPressed: () {
+                                                    log("-------->${ userManagementController
+                                                        .sipData?.userWithActiveSip.id ?? ""}");
                                                     controller.addGoldManually(
                                                         userManagementController
-                                                                .sipData
-                                                                ?.userWithActiveSip
-                                                                ?.id ??
-                                                            "");
+                                                                .sipData?.userWithActiveSip.id ?? "");
                                                     Navigator.pop(context);
                                                   },
                                                   style: ElevatedButton.styleFrom(
@@ -425,12 +420,7 @@ Widget userAllDetailsDesktopView(
                                                       .goldYellowColor,
                                                 ),
                                                 CommonText(
-                                                  text: userManagementController
-                                                          .sipData
-                                                          ?.userWithActiveSip
-                                                          ?.totalGramsAccumulated
-                                                          ?.toStringAsFixed(
-                                                              3) ??
+                                                  text: controller.totalGoldUpdated.value.toString() ??
                                                       "",
                                                   fontSize: 32,
                                                   color: ColorHelper
